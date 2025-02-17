@@ -1,0 +1,109 @@
+.pageContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100svh;
+    width: 100vw;
+    overflow: hidden;
+    background-position: top left;
+    backdrop-filter: opacity(5px);
+    box-sizing: border-box;
+    padding: 10px;
+    font-family: "Raleway", serif;
+}
+
+.formWrapper {
+    width: 100%;
+    height: 100%;
+    max-width: 450px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items:  center;
+    justify-content: center;
+    padding: 10px;
+    margin-top: 20px;
+    gap: 20px;
+    background-repeat: repeat;
+    background-size: 300px 300px;
+}
+
+.imageBlock {
+    width: 100%;
+    max-width: 300px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    z-index: 300;
+    padding: 10px;
+    background-color: #6699CC;
+    backdrop-filter: blur(4px);
+    box-sizing: border-box;
+}
+
+.imageBlock img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.formContainer {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 450px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    background-color: #fff;
+}
+
+.form {
+    width: 100%;
+    height: 400px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.submitButton {
+    margin-top: 15px;
+}
+
+.footerButtons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+@media screen and (min-width: 900px) {
+    .formWrapper {
+        flex-direction: row;
+        max-width: 800px;
+        max-height: 450px;
+
+    }
+
+    .imageBlock {
+        width: 50%;
+        max-width: 400px;
+        height: 400px;
+        margin-left: -100px;
+    }
+
+    .formContainer {
+        width: 50%;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .formWrapper {
+        box-shadow: 0px 0px 0px;
+        gap: 0px;
+    }
+}
