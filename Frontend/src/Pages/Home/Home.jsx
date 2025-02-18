@@ -1,65 +1,43 @@
-// Home.jsx
-import React, { useState, useEffect } from 'react';
-// import jwt_decode from 'jwt-decode';  // Correct import
-
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import SquareLoader from "../../Components/Loader/SquareLoader/SquareLoader"
 const Home = () => {
-  const [userData, setUserData] = useState(null);  // State to hold user data
-  const [loading, setLoading] = useState(true);    // State to handle loading state
-  const [error, setError] = useState(null);        // State to handle error
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken'); // Get the token from localStorage
-
+    const token = localStorage.getItem("authToken");
     if (!token) {
-      setError('No token found');
-      setLoading(false);
+      navigate("/login"); // Redirect to login if token is missing
       return;
     }
 
-    // Decode the JWT token
-    const decodedToken = jwt_decode(token);
-    const userEmail = decodedToken.email; // Assuming email is part of the decoded token
+    try {
+      const decoded = jwtDecode(token);
+      setUser(decoded); // Set user details from token
+    } catch (error) {
+      console.error("Invalid token:", error);
+      localStorage.removeItem("token");
+      navigate("/login");
+    }
+  }, [navigate]);
 
-    // Fetch user data from backend using email
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch(`http://localhost:5000/api/users/user/${userEmail}`, {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,  // Send token in the request header
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch user data');
-        }
-
-        const data = await response.json();
-        setUserData(data);  // Set the fetched data to state
-        setLoading(false);   // Stop loading
-      } catch (err) {
-        setError(err.message);  // Handle any errors
-        setLoading(false);
-      }
-    };
-
-    fetchUserData();  // Call the fetch function
-  }, []);
-
-  // Render loading state, error, or user data
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  if (!user) return <SquareLoader></SquareLoader>;
 
   return (
     <div>
-      <h1>Welcome, {userData?.name}</h1> {/* Example user data */}
-      <p>Email: {userData?.email}</p>
-      <p>Other Info: {userData?.otherInfo}</p>
+      <h1>Home</h1>
+      <p>Welcome, {user.email || "User"}!</p>
+
+      <p>Your Role: {user.role}</p>
+      <p>Your Id: {user.id}</p>
+
+      {user.role === "admin" ? (
+        <p>You have admin access!</p>
+      ) : (
+        <p>You are a regular user.</p>
+      )}
     </div>
   );
 };

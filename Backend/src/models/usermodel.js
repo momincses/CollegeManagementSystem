@@ -31,7 +31,10 @@ const userSchema = new mongoose.Schema({
   otp: { type: String },
   otpExpires: { type: Date },
   isVerified: { type: Boolean, default: false }, // Stores OTP verification status
-  role: { type: String, default: "user" }, // Default role
-});
+  role: { type: String,enum: ["admin", "student", "doctor"], default: "student" }, // Default role
+},
+  {
+    timestamps: true,
+  });
 
 module.exports = mongoose.model("User", userSchema);

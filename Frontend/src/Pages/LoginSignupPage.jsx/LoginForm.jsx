@@ -52,7 +52,7 @@ const LoginForm = ({ toggleForm }) => {
   
         if (response.ok) {
           // If login is successful, store the authToken
-          localStorage.setItem("authToken", data.authToken); // Store the authToken
+          localStorage.setItem("authToken", data.token); // Store the authToken
   
           // Redirect to home page after successful login
           navigate("/"); // Redirect to home page
