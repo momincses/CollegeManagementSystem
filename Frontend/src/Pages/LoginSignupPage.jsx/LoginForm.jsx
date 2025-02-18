@@ -21,7 +21,7 @@ const LoginForm = ({ toggleForm }) => {
   // Handle login
   const handleLogin = async () => {
     let isValid = true;
-
+  
     // Email validation
     if (!emailRegex.test(email)) {
       setEmailError("Enter a valid college email ID");
@@ -29,7 +29,7 @@ const LoginForm = ({ toggleForm }) => {
     } else {
       setEmailError("");
     }
-
+  
     // Password validation (for example, not empty)
     if (!password) {
       setPasswordError("Password is required");
@@ -37,7 +37,7 @@ const LoginForm = ({ toggleForm }) => {
     } else {
       setPasswordError("");
     }
-
+  
     if (isValid) {
       setLoading(true); // Show loader when login is in progress
       try {
@@ -47,11 +47,14 @@ const LoginForm = ({ toggleForm }) => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
         });
-
+  
         const data = await response.json();
-
+  
         if (response.ok) {
-          // If login is successful, redirect to home page
+          // If login is successful, store the authToken
+          localStorage.setItem("authToken", data.authToken); // Store the authToken
+  
+          // Redirect to home page after successful login
           navigate("/"); // Redirect to home page
         } else {
           // Handle error from backend (incorrect password or non-existing user)
@@ -66,6 +69,7 @@ const LoginForm = ({ toggleForm }) => {
       }
     }
   };
+  
 
   return (
     <Box className={styles.form}>

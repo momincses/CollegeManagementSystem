@@ -13,7 +13,7 @@
 //     },
 //     role: {
 //       type: String,
-//       enum: ["admin", "student", "doctor"],
+//       enum: ["admin", "student", "doctor", ""],
 //     },
 //   },
 //   {
