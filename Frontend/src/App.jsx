@@ -6,7 +6,7 @@ import ProtectedRoute from './utils/ProtectedRoute';
 import ProfilePage from './Pages/ProfilePage/ProfilePage';
 import { AuthProvider } from './contexts/AuthContext';
 import ElectionRoutes from './routes/ElectionRoutes';
-import UnauthorizedPage from './Components/common/UnauthorizedPage';
+import UnauthorizedPage from './components/common/UnauthorizedPage';
 
 // Remove or comment out these imports until you create the components
 // import Navbar from './components/common/Navbar';
