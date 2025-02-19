@@ -2,20 +2,35 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import SquareLoader from "../../Components/Loader/SquareLoader/SquareLoader"
+
 const Home = () => {
   const [user, setUser] = useState(null);
+  const [apiStatus, setApiStatus] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Test API connection
+    fetch('http://localhost:5000/api/test')
+      .then(res => res.json())
+      .then(data => {
+        setApiStatus(data);
+        console.log("API Status:", data);
+      })
+      .catch(err => {
+        console.error("API Connection Error:", err);
+        setApiStatus({ status: "error", message: err.message });
+      });
+
+    // Check authentication
     const token = localStorage.getItem("authToken");
     if (!token) {
-      navigate("/login"); // Redirect to login if token is missing
+      navigate("/login");
       return;
     }
 
     try {
       const decoded = jwtDecode(token);
-      setUser(decoded); // Set user details from token
+      setUser(decoded);
     } catch (error) {
       console.error("Invalid token:", error);
       localStorage.removeItem("token");
@@ -23,20 +38,27 @@ const Home = () => {
     }
   }, [navigate]);
 
-  if (!user) return <SquareLoader></SquareLoader>;
+  if (!user) return <SquareLoader />;
 
   return (
     <div>
-      <h1>Home</h1>
-      <p>Welcome, {user.email || "User"}!</p>
+      <h1>System Status</h1>
+      
+      <h2>User Information:</h2>
+      <p>Email: {user.email}</p>
+      <p>Role: {user.role}</p>
+      <p>ID: {user.id}</p>
 
-      <p>Your Role: {user.role}</p>
-      <p>Your Id: {user.id}</p>
-
-      {user.role === "admin" ? (
-        <p>You have admin access!</p>
+      <h2>API Status:</h2>
+      {apiStatus ? (
+        <div>
+          <p>Status: {apiStatus.status}</p>
+          <p>Message: {apiStatus.message}</p>
+          <p>Database: {apiStatus.database}</p>
+          <p>Auth Service: {apiStatus.auth}</p>
+        </div>
       ) : (
-        <p>You are a regular user.</p>
+        <p>Loading API status...</p>
       )}
     </div>
   );

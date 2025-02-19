@@ -24,3 +24,52 @@ dist-ssr
 *.sw?
 
 .env
+
+# College Management System with Voting Feature
+
+## Features Added
+- User Authentication System
+- Student Voting System
+- Admin Dashboard
+- Real-time Results Display
+- Email OTP Verification
+
+## Technical Details
+- Backend: Node.js with Express
+- Frontend: React with Material-UI
+- Database: MongoDB
+- Real-time Updates: Socket.io
+
+## Testing Instructions
+1. Clone repository
+2. Install dependencies:
+   ```bash
+   # Backend setup
+   cd Backend
+   npm install
+   
+   # Frontend setup
+   cd Frontend
+   npm install
+   ```
+3. Set up environment variables
+4. Start servers:
+   ```bash
+   # Backend
+   npm start
+   
+   # Frontend
+   npm run dev
+   ```
+
+## Environment Variables Required
+Backend (.env):
+- PORT
+- MONGO_URI
+- JWT_SECRET
+- EMAIL_USER
+- EMAIL_PASS
+
+## Notes
+- Requires MongoDB running locally
+- Email service configured for Gmail
