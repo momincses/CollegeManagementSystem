@@ -4,14 +4,30 @@ import { jwtDecode } from "jwt-decode";
 import { Card, CardContent, Typography, Button, Box } from "@mui/material";
 import SquareLoader from "../../Components/Loader/SquareLoader/SquareLoader";
 
+
 const Home = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [apiStatus, setApiStatus] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Test API connection
+    fetch('http://localhost:5000/api/test')
+      .then(res => res.json())
+      .then(data => {
+        setApiStatus(data);
+        console.log("API Status:", data);
+      })
+      .catch(err => {
+        console.error("API Connection Error:", err);
+        setApiStatus({ status: "error", message: err.message });
+      });
+
+    // Check authentication
     const token = localStorage.getItem("authToken");
     if (!token) {
+      navigate("/login");
       navigate("/login");
       return;
     }

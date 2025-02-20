@@ -1,14 +1,16 @@
-import React from 'react'
+import React from "react";
+import Navbar from "../../Components/StudentPageComponents/Navbar/Navbar";
+import StudentHero from "../../Components/StudentPageComponents/StudentHero/StudentHero"
 import styles from "./StudentHome.module.css"
-import StudentHero from '../../Components/StudentPageComponents/StudentHero/StudentHero'
-
 const StudentHome = () => {
   return (
-    <div>
-        <Navbar></Navbar>
-        <StudentHero></StudentHero>
+    <>
+      <Navbar />
+    <div className={styles.StudentHome}>
+      <StudentHero></StudentHero>
     </div>
-  )
-}
+    </>
+  );
+};
 
-export default StudentHome
+export default StudentHome;
