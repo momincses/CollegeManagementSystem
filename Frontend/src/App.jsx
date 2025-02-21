@@ -15,6 +15,7 @@ import DoctorHome from "./Pages/DoctorHome/DoctorHome";
 import { AuthProvider } from "./contexts/AuthContext";
 import UnauthorizedPage from "./components/common/UnauthorizedPage";
 import StudentRoutes from "./routes/StudentRoutes";
+import CoordinatorRoutes from "./routes/CoordinatorRoutes";
 
 // Remove or comment out these imports until you create the components
 // import Navbar from './components/common/Navbar';
@@ -36,14 +37,7 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-          {/* <Route
-            path="/election/*"
-            element={
-              <ProtectedRoute allowedRoles={["student", "admin"]}>
-                <ElectionRoutes />
-              </ProtectedRoute>
-            }
-          /> */}
+
           <Route
             path="/student/*"
             element={
@@ -52,21 +46,20 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-          {/* <Route
-            path="/student"
+          <Route
+            path="/coordinator/*"
             element={
               <ProtectedRoute allowedRoles={["student", "admin"]}>
-                <StudentHome />{" "}
+                <CoordinatorRoutes />
               </ProtectedRoute>
             }
-          /> */}
+          />
 
           <Route
             path="/admin"
             element={
               <ProtectedRoute allowedRoles={["admin"]}>
                 <AdminHome />{" "}
-                {/* Only accessible if the user is authenticated */}
               </ProtectedRoute>
             }
           />
@@ -75,7 +68,6 @@ const App = () => {
             element={
               <ProtectedRoute allowedRoles={["doctor", "admin"]}>
                 <DoctorHome />{" "}
-                {/* Only accessible if the user is authenticated */}
               </ProtectedRoute>
             }
           />

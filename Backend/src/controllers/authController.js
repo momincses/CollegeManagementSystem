@@ -54,26 +54,63 @@ const verifyOtp = async (req, res) => {
   }
 };
 
-// Step 3: Register user after OTP verification
+// Step 3: Register user
 const register = async (req, res) => {
   try {
     const { email, password, role } = req.body;
-
-    const user = await User.findOne({ email });
-
-    if (!user || !user.isVerified) {
-      return res.status(400).json({ message: "OTP verification required before registration" });
+    
+    // Validate role
+    const allowedRoles = ['student', 'student-coordinator'];
+    if (!allowedRoles.includes(role)) {
+      return res.status(400).json({ message: "Invalid role selected" });
     }
 
-    if (!password) return res.status(400).json({ message: "Password is required" });
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "Please complete OTP verification first" });
+    }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    if (!user.isVerified) {
+      return res.status(400).json({ message: "Email not verified" });
+    }
+
+    if (user.password) {
+      return res.status(400).json({ message: "User already registered" });
+    }
+
+    // For coordinator role, add additional validation
+    if (role === 'student-coordinator') {
+      // You might want to add additional validation here
+      // For example, check if the email domain matches a specific pattern
+      // or if the user is in a specific year
+      const emailDomain = email.split('@')[1];
+      if (emailDomain !== 'sggs.ac.in') {
+        return res.status(400).json({ 
+          message: "Coordinator registration requires a valid college email" 
+        });
+      }
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
     user.password = hashedPassword;
-    user.isVerified = true; // Ensure user is verified
+    user.role = role; // Set the selected role
     await user.save();
 
-    res.status(201).json({ message: "User registered successfully" });
+    const token = jwt.sign(
+      { email: user.email, id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    res.status(200).json({ 
+      message: "Registration successful", 
+      token,
+      role: user.role 
+    });
   } catch (err) {
+    console.error("Registration error:", err);
     res.status(500).json({ message: "Something went wrong" });
   }
 };

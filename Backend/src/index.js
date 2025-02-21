@@ -6,6 +6,7 @@ const cors = require("cors")
 const authRoutes = require("./routes/authRoutes")
 const userRoutes = require("./routes/userRoutes")
 const electionRoutes = require("./routes/electionRoutes");
+const eventRoutes = require("./routes/eventRoutes");
 const http = require('http');
 const setupSocket = require('./socket/electionSocket');
 
@@ -39,6 +40,9 @@ app.use("/api/users", userRoutes);
 
 // Add election routes
 app.use("/api/election", electionRoutes);
+
+// Add event management routes
+app.use("/api/events", eventRoutes);
 
 //sick Leave routes
 app.use("/api/", sickLeaveRoutes);

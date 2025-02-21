@@ -31,7 +31,7 @@ const Navbar = () => {
     { text: "Elections", path: "/student/election/candidates" },
     { text: "Sick Leave", path: "/student/sick-leave" },
     { text: "Facility Booking", path: "/student/facility-booking" },
-    { text: "Event Requests", path: "/student/event-requests" },
+    { text: "Event Requests", path: "/student/events" },
     { text: "Complaints", path: "/student/complaints" },
     { text: "Budget Tracker", path: "/student/budget-tracking" },
     { text: "Cheater Records", path: "/student/cheaters-records" },
@@ -144,7 +144,7 @@ const Navbar = () => {
     flexGrow: 1,
     mt: 8,
     p: { xs: 1, sm: 2, md: 2 }, // Increased padding
-    width: "100%",
+    maxWidth: "100%",
     width: { sm: `calc(100% - ${drawerWidth}px)` },
     boxSizing: "border-box",
     display: "flex",

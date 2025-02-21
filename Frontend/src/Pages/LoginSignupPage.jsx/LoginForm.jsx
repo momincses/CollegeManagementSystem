@@ -67,7 +67,7 @@ const LoginForm = ({ toggleForm }) => {
       } finally {
         setLoading(false); // Hide loader once the request is complete
       }
-    }
+    }0
   };
   
 
