@@ -1,14 +1,10 @@
 .StudentHome {
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
-}
-
-@media screen and (min-width: 900px) {
-    .StudentHome {
-        margin-Left: 240px;
-        /* min-height: 100vh;   */
-        box-sizing: border-box;
-        background-color: #f9f9f9;
-}
-}
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    overflow-x: hidden; /* Changed from auto to hidden to avoid scroll issues */
+    width: 100%;
+    box-sizing: border-box; /* Ensure padding doesn't increase width */
+  }
+  

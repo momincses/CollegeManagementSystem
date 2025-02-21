@@ -9,6 +9,10 @@ const electionRoutes = require("./routes/electionRoutes");
 const http = require('http');
 const setupSocket = require('./socket/electionSocket');
 
+//Sick leave routes
+const sickLeaveRoutes = require("../src/routes/sickLeaveRoutes")
+
+
 const app = express();
 const server = http.createServer(app);
 const io = setupSocket(server);
@@ -35,6 +39,9 @@ app.use("/api/users", userRoutes);
 
 // Add election routes
 app.use("/api/election", electionRoutes);
+
+//sick Leave routes
+app.use("/api/", sickLeaveRoutes);
 
 // Add after other routes
 app.get("/api/test", (req, res) => {

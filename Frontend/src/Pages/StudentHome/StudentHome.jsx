@@ -2,12 +2,13 @@ import React from "react";
 import Navbar from "../../Components/StudentPageComponents/Navbar/Navbar";
 import StudentHero from "../../Components/StudentPageComponents/StudentHero/StudentHero"
 import styles from "./StudentHome.module.css"
+import ExploreSection from "../../Components/StudentPageComponents/ExploreSection/ExploreSection";
 const StudentHome = () => {
   return (
     <>
-      <Navbar />
     <div className={styles.StudentHome}>
       <StudentHero></StudentHero>
+      <ExploreSection></ExploreSection>
     </div>
     </>
   );

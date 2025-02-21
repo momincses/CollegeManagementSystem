@@ -14,34 +14,32 @@ const StudentHero = () => {
 
   return (
     <Box
-  sx={{
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "start",
-    boxSizing:'border-box',
-    p: "20px",
-    height: "auto",
-    minHeight: "25vh",
-    bgcolor: "linear-gradient(135deg, #e3f2fd 0%, #fce4ec 100%)", // Light gradient
-    borderRadius: 4,
-    boxShadow: 4,
-    mb: 3,
-    overflow: "hidden",
-    width: "96%",
-    border: "1px solid #e0e0e0",
-  }}
->
-  <Typography
-    variant={isMobile ? "h5" : "h4"}
-    sx={{ fontWeight: "bold", color: "#1565c0" }} // Softer primary color
-  >
-    {greeting}, Student!
-  </Typography>
-  <Typography variant="body1" sx={{ mt: 1, color: "#616161" }}>
-    What would you like to do today?
-  </Typography>
-</Box>
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "start",
+        boxSizing: "border-box",
+        height: "auto",
+        minHeight: "15vh",
+        background: "linear-gradient(135deg, #e3f2fd 0%, #fce4ec 100%)", // Correct background usage
+        borderRadius: 4,
+        mb: 3,
+        padding: '15px',
+        overflow: "hidden",
+        width: "100%", // Ensures it takes width of parent, not viewport
+      }}
+    >
+      <Typography
+        variant={isMobile ? "h5" : "h4"}
+        sx={{ fontWeight: "bold", color: "#1565c0" }}
+      >
+        {greeting}, Student!
+      </Typography>
+      <Typography variant="body1" sx={{ mt: 1, color: "#616161" }}>
+        What would you like to do today?
+      </Typography>
+    </Box>
   );
 };
 

@@ -144,6 +144,7 @@ const Navbar = () => {
     flexGrow: 1,
     mt: 8,
     p: { xs: 1, sm: 2, md: 2 }, // Increased padding
+    width: "100%",
     width: { sm: `calc(100% - ${drawerWidth}px)` },
     boxSizing: "border-box",
     display: "flex",

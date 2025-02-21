@@ -52,15 +52,14 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-          <Route
+          {/* <Route
             path="/student"
             element={
               <ProtectedRoute allowedRoles={["student", "admin"]}>
                 <StudentHome />{" "}
-                {/* Only accessible if the user is authenticated */}
               </ProtectedRoute>
             }
-          />
+          /> */}
 
           <Route
             path="/admin"
