@@ -53,15 +53,15 @@ const AdminInvitePage = () => {
     }
   };
 
-  if(loading ) {
-    return <SquareLoader/>;
+  if (isLoading) {
+    return <SquareLoader />;
   }
 
   return (
     <Box
       sx={{
         backgroundColor: "#f5f5f5",
-        minHeight: "100vh",
+        // minHeight: "100vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -130,20 +130,31 @@ const AdminInvitePage = () => {
           </Button>
         </form>
 
-        {success && <Alert sx={{ mt: 2 }} severity="success">{success}</Alert>}
-        {error && <Alert sx={{ mt: 2 }} severity="error">{error}</Alert>}
+        {success && (
+          <Alert sx={{ mt: 2 }} severity="success">
+            {success}
+          </Alert>
+        )}
+        {error && (
+          <Alert sx={{ mt: 2 }} severity="error">
+            {error}
+          </Alert>
+        )}
 
         {invitationLink && (
           <Box mt={3}>
             <Typography variant="subtitle1">Invitation Link:</Typography>
-            <Link href={invitationLink} underline="hover" color="primary">
+            <Link
+              href={invitationLink}
+              underline="hover"
+              color="primary"
+              sx={{ wordBreak: "break-all" }}
+            >
               {invitationLink}
             </Link>
           </Box>
         )}
       </Paper>
-
-      
     </Box>
   );
 };

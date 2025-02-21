@@ -1,5 +1,5 @@
-const Candidate = require("../models/CandidateModel");
-const Vote = require("../models/VoteModel");
+const Candidate = require("../models/Election/CandidateModel");
+const Vote = require("../models/Election/VoteModel");
 const { v4: uuidv4 } = require('uuid');
 
 // Add candidate (Admin only)

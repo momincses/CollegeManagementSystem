@@ -6,7 +6,7 @@ const exploreItems = [
   { label: "Elections", path: "/student/election/candidates" },
   { label: "Sick Leave", path: "/student/sick-leave" },
   { label: "Facility Booking", path: "/student/facility-booking" },
-  { label: "Event Requests", path: "/student/event-requests" },
+  { label: "Event Requests", path: "/student/events" },
   { label: "Complaints", path: "/student/complaints" },
   { label: "Budget Tracker", path: "/student/budget-tracking" },
   { label: "Cheater Records", path: "/student/budget-tracking" },

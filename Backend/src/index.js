@@ -7,6 +7,7 @@ const authRoutes = require("./routes/authRoutes")
 const userRoutes = require("./routes/userRoutes")
 const electionRoutes = require("./routes/electionRoutes");
 const eventRoutes = require("./routes/eventRoutes");
+const coordinatorRoutes = require("../src/routes/coordinatorRoutes")
 const http = require('http');
 const setupSocket = require('./socket/electionSocket');
 
@@ -47,6 +48,10 @@ app.use("/api/events", eventRoutes);
 //sick Leave routes
 app.use("/api/", sickLeaveRoutes);
 
+// Coordinator Auth Routes
+app.use("/api/coordinator", coordinatorRoutes);
+
+
 // Add after other routes
 app.get("/api/test", (req, res) => {
     res.json({ 
@@ -61,6 +66,8 @@ app.get("/api/test", (req, res) => {
 app.get("/", (req, res) => {
   res.send("MongoDB Connected to Express!");
 });
+
+
 
 // After dbConnect();
 console.log("Testing database connection...");
