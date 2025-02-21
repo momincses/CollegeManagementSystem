@@ -23,6 +23,14 @@ const Navbar = () => {
             <Button color="inherit" onClick={() => navigate('/')}>Home</Button>
             <Button color="inherit" onClick={() => navigate('/profile')}>Profile</Button>
             <Button color="inherit" onClick={handleLogout}>Logout</Button>
+            {user?.role === 'student' && (
+              <Button 
+                color="inherit" 
+                onClick={() => navigate('/student/event-request')}
+              >
+                Request Event
+              </Button>
+            )}
           </>
         ) : (
           <Button color="inherit" onClick={() => navigate('/login')}>Login</Button>

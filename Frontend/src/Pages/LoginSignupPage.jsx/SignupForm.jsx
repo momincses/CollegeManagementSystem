@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextField, Button, Typography, Box, Dialog, DialogTitle, DialogContent } from "@mui/material";
+import { TextField, Button, Typography, Box, Dialog, DialogTitle, DialogContent, MenuItem } from "@mui/material";
 import styles from "./LoginSignupPage.module.css";
 import SquareLoader from "../../Components/Loader/SquareLoader/SquareLoader";
 
@@ -15,6 +15,7 @@ const SignupForm = ({ toggleForm }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [role, setRole] = useState('student');
 
   // Dialog state
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -92,7 +93,8 @@ const SignupForm = ({ toggleForm }) => {
   };
 
   // Register User
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (!passwordRegex.test(password)) {
       setPasswordError("Password must contain at least 1 capital letter, 1 small letter, 1 special character, and be at least 6 characters long.");
       return;
@@ -107,7 +109,11 @@ const SignupForm = ({ toggleForm }) => {
       const response = await fetch(`${API_BASE_URL}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({
+          email,
+          password,
+          role
+        }),
       });
 
       const data = await response.json();
@@ -168,15 +174,25 @@ const SignupForm = ({ toggleForm }) => {
       {activeStep === 1 && (
         <Box>
           <TextField
-            label="Password"
-            variant="outlined"
-            type="password"
+            select
             fullWidth
+            label="Role"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
             margin="normal"
+          >
+            <MenuItem value="student">Student</MenuItem>
+            <MenuItem value="student-coordinator">Student Coordinator</MenuItem>
+          </TextField>
+          <TextField
+            fullWidth
+            type="password"
+            label="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             error={!!passwordError}
             helperText={passwordError}
+            margin="normal"
           />
           <TextField
             label="Confirm Password"
