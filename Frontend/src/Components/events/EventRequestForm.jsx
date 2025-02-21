@@ -6,26 +6,10 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
 import SquareLoader from '../Loader/SquareLoader/SquareLoader';
+import { jwtDecode } from 'jwt-decode'; // ✅ Import jwt-decode
 
 // Available event types
 const eventTypes = ['Academic', 'Cultural', 'Sports', 'Technical', 'Other'];
-
-const decodeToken = (token) => {
-  try {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split('')
-        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-        .join('')
-    );
-    return JSON.parse(jsonPayload);
-  } catch (error) {
-    console.error('Failed to decode token:', error);
-    return null;
-  }
-};
 
 const EventRequestForm = () => {
   const navigate = useNavigate();
@@ -43,14 +27,20 @@ const EventRequestForm = () => {
   useEffect(() => {
     const token = localStorage.getItem('coordinatorAuthToken');
     if (!token) {
-      navigate('/coordinator/login');
+      navigate('/coordinator/student-coordinator/login');
     } else {
-      const decodedUser = decodeToken(token);
-      if (decodedUser && decodedUser.email && decodedUser.userId) {
-        setUser(decodedUser);
-      } else {
+      try {
+        const decodedUser = jwtDecode(token); // ✅ Decode using jwt-decode
+        if (decodedUser && decodedUser.email && decodedUser.userId) {
+          setUser(decodedUser); // Set user only if valid
+        } else {
+          localStorage.removeItem('coordinatorAuthToken');
+          navigate('/coordinator/student-coordinator/login');
+        }
+      } catch (error) {
+        console.error('Failed to decode token:', error);
         localStorage.removeItem('coordinatorAuthToken');
-        navigate('/coordinator/login');
+        navigate('/coordinator/student-coordinator/login');
       }
     }
   }, [navigate]);

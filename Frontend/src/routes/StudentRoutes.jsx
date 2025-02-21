@@ -26,10 +26,10 @@ const StudentRoutes = () => {
         } />
         
         {/* Create Event Request - Only for student coordinators */}
-        <Route path="/event-request" element={
-          <ProtectedRoute allowedRoles={["student-coordinator"]}>
+        <Route path="/student-coordinator/event-request" element={
+          // <ProtectedRoute >
             <EventRequestForm />
-          </ProtectedRoute>
+          // </ProtectedRoute>
         }/>
       </Route>
     </Routes>

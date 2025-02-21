@@ -30,9 +30,9 @@ const LoginPage = () => {
       );
       const data = await response.json();
       if (response.ok) {
-        localStorage.setItem("token", data.token);
-        navigate(`/${role}/dashboard`);
-      } else {
+        localStorage.setItem("coordinatorAuthToken", data.token);
+        navigate(-1); // Redirect back to event request page
+      }else {
         setError(data.message || "Login failed.");
       }
     } catch (err) {

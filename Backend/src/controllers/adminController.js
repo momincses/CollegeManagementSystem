@@ -15,7 +15,7 @@ exports.generateInvitationLink = async (req, res) => {
       { expiresIn: "2d" } // Link expires in 2 days
     );
 
-    const invitationLink = `${process.env.CLIENT_URL}/signup/${token}`;
+    const invitationLink = `${process.env.CLIENT_URL}/coordinator/signup/${token}`;
     const subject = "You're Invited to Register as a Coordinator";
     const text = `Hello,\n\nYou have been invited to register as a ${role.replace("-", " ")}.\n\nClick the link below to complete your signup:\n${invitationLink}\n\nThis link will expire in 2 days.\n\nBest regards,\nTeam`;
 
