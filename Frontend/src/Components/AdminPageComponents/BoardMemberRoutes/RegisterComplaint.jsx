@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Box,
     TextField,
@@ -7,164 +7,114 @@ import {
     Paper,
     Alert,
     MenuItem,
+    Checkbox,
+    FormControlLabel,
 } from '@mui/material';
 import { jwtDecode } from "jwt-decode";
 import { useAuth } from '../../../contexts/AuthContext';
 import SquareLoader from '../../Loader/SquareLoader/SquareLoader';
 
-// Available event types for the dropdown
 const eventTypes = ["Harassment", "Faculty Issue", "Campus Facility Issue"];
-const API_BASE_URL = "http://localhost:5000/api/events";
+const API_BASE_URL = "http://localhost:5000/api/complaints";
 
 const RegisterComplaint = () => {
-    // Get current user context for coordinator ID
     const { user } = useAuth();
+    const token = localStorage.getItem('authToken');
 
-    // Main form state with budget management
     const [formData, setFormData] = useState({
         title: '',
         description: '',
         category: '',
         submitted_by: '',
         date: '',
-        status: "",                 // filled in backend    
-        moderation_status: ""       // filled in backend
+        anonymous: false,
     });
 
-    // UI state management
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
-    const [loading, setLoading] = useState(false);
 
-    // Handle changes in main form fields
+    useEffect(() => {
+        if (token) {
+            const id = jwtDecode(token).id;
+            setFormData((prev) => ({ ...prev, submitted_by: id }));
+        }
+    }, [token]);
+
     const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
+        const { name, value, type, checked } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: type === "checkbox" ? checked : value,
+            submitted_by: name === "anonymous" && checked ? null : prev.submitted_by
+        }));
     };
 
-    // Submit the entire form
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // console.log(error);
-        const token = localStorage.getItem('authToken');
         setLoading(true);
+
+        const formPayload = new FormData();
+        Object.keys(formData).forEach((key) => formPayload.append(key, formData[key]));
+
         try {
-            formData.date = new Date();
-            const id = jwtDecode(token).id;
-            formData.submitted_by = id;
-            // console.log(id);
-            // return;
-            const response = await fetch(`${API_BASE_URL}/register-complaint/${id}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    ...formData,
-                })
-            });
+            const response = await fetch(
+                `${API_BASE_URL}/register-complaint/${formData.submitted_by}`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: formPayload,
+                }
+            );
 
             if (response.ok) {
                 setSuccess(true);
-                // Reset form after successful submission
+                setTimeout(() => setSuccess(false), 5000);
                 setFormData({
                     title: '',
                     description: '',
                     category: '',
-                    submitted_by: '',
-                    status: "",
+                    submitted_by:  formData.submitted_by,
                     date: '',
-                    moderation_status: ""
+                    anonymous: false,
                 });
             } else {
                 const data = await response.json();
-                setError(data.message || 'Failed to submit event request');
+                setError(data.message || 'Failed to submit complaint');
+                setTimeout(() => setError(null), 5000);
             }
         } catch (err) {
-            setError('Failed to submit event request');
+            setError('Server error. Try again later.');
+            setTimeout(() => setError(null), 5000);
         } finally {
             setLoading(false);
         }
     };
 
-    // Show loader while submitting
     if (loading) return <SquareLoader />;
 
-    // Form UI
     return (
         <Paper sx={{ p: 3, maxWidth: 800, mx: 'auto', mt: 4 }}>
-            {/* Form Header */}
             <Typography variant="h5" gutterBottom>
                 Submit A Complaint
             </Typography>
 
-            {/* Status Messages */}
-            {error && (
-                <Alert severity="error" sx={{ mb: 2 }}>
-                    {error}
-                </Alert>
-            )}
-            {success && (
-                <Alert severity="success" sx={{ mb: 2 }}>
-                    Event request submitted successfully!
-                </Alert>
-            )}
+            {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+            {success && <Alert severity="success" sx={{ mb: 2 }}>Complaint submitted successfully!</Alert>}
 
-            {/* Main Form */}
             <Box component="form" onSubmit={handleSubmit}>
-                {/* Complaint title Details */}
-                <TextField
-                    fullWidth
-                    label="Title"
-                    name="title"
-                    value={formData.eventTitle}
-                    onChange={handleChange}
-                    margin="normal"
-                    required
-                />
-
-                {/* description */}
-                <TextField
-                    fullWidth
-                    label="Description"
-                    name="description"
-                    value={formData.complaintDescription}
-                    onChange={handleChange}
-                    margin="normal"
-                    multiline
-                    rows={4}
-                    required
-                />
-
-                {/* Event Type Dropdown */}
-                <TextField
-                    fullWidth
-                    select
-                    label="Complaint Category"
-                    name="category"
-                    value={formData.eventType}
-                    onChange={handleChange}
-                    margin="normal"
-                    required
-                >
-                    {eventTypes.map((type) => (
-                        <MenuItem key={type} value={type}>
-                            {type}
-                        </MenuItem>
-                    ))}
+                <TextField fullWidth label="Title" name="title" value={formData.title} onChange={handleChange} margin="normal" required />
+                <TextField fullWidth label="Description" name="description" value={formData.description} onChange={handleChange} margin="normal" multiline rows={4} required />
+                
+                <TextField fullWidth select label="Complaint Category" name="category" value={formData.category} onChange={handleChange} margin="normal" required>
+                    {eventTypes.map((type) => <MenuItem key={type} value={type}>{type}</MenuItem>)}
                 </TextField>
 
-                {/* Submit Button */}
-                <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    sx={{ mt: 3 }}
-                >
+                <FormControlLabel control={<Checkbox checked={formData.anonymous} onChange={handleChange} name="anonymous" />} label="Submit Anonymously" />
+
+                <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 3 }}>
                     Submit Complaint
                 </Button>
             </Box>
@@ -172,4 +122,4 @@ const RegisterComplaint = () => {
     );
 };
 
-export default RegisterComplaint; 
+export default RegisterComplaint;

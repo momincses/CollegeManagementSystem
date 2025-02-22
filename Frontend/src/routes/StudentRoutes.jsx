@@ -14,6 +14,7 @@ import MyComplaints from "../Components/AdminPageComponents/BoardMemberRoutes/My
 import RegisterComplaint from "../Components/AdminPageComponents/BoardMemberRoutes/RegisterComplaint";
 import PublicComplaints from "../Components/AdminPageComponents/BoardMemberRoutes/PublicComplaints";
 import Logout from "../Components/AdminPageComponents/BoardMemberRoutes/Logout";
+import BudgetTracking from "../Components/BudgetTracking";
 
 const StudentRoutes = () => {
   return (
@@ -81,6 +82,14 @@ const StudentRoutes = () => {
         <Route path="/allfacilities" element={<FacilityBookingPage />} />
         <Route path="/facility/:id" element={<FacilityDetails />} />
         
+        <Route
+            path="/expenditure/list"
+            element={
+              <ProtectedRoute>
+                <BudgetTracking />
+              </ProtectedRoute>
+            }
+          />
 
         
       <Route path="*" element={<Navigate to="/" replace />} />

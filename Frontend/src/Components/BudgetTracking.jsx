@@ -223,7 +223,7 @@ const BudgetTracking = ({ eventId, userRole }) => {
       </Box>
 
       {/* Export/Print Section */}
-      <div className="export-section">
+      {/* <div className="export-section">
         <button 
           className="export-btn"
           onClick={handleExport}
@@ -236,7 +236,7 @@ const BudgetTracking = ({ eventId, userRole }) => {
         >
           <i className="fas fa-print"></i> Print Report
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };
