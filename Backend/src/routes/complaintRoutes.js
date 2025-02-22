@@ -1,42 +1,3 @@
-// const express = require('express');
-// const router = express.Router();
-// const eventController = require('../controllers/eventController');
-// const verifyToken = require('../middleware/authMiddleware');
-// const authorizeRoles = require('../middleware/roleMiddleware');
-
-// // Create event request (student coordinator only)
-// router.post('/request', 
-//   verifyToken, 
-//   authorizeRoles('student-coordinator'), 
-//   eventController.createRequest
-// );
-
-// // Get all events (filtered by role)
-// router.get('/', 
-//   verifyToken, 
-//   eventController.getEvents
-// );
-
-// // Get specific event details
-// router.get('/:eventId', 
-//   verifyToken, 
-//   eventController.getEventById
-// );
-
-// // Update event status (admin only)
-// router.patch('/:eventId/status', 
-//   verifyToken, 
-//   authorizeRoles('admin'), 
-//   eventController.updateEventStatus
-// );
-
-// module.exports = router; 
-
-
-
-
-
-
 const express = require('express');
 const router = express.Router();
 const eventController = require('../controllers/eventController');
@@ -64,8 +25,7 @@ router.get('/get-flagged-complaints',
 // Get a users complaints (filtered by role)
 router.get('/get-user-complaints/:id', 
   verifyToken, 
-  // authorizeRoles('student-coordinator'), 
-  eventController.createRequest
+  eventController.getUserComplaints
 );
 
 // register a complaint
@@ -89,4 +49,4 @@ router.delete('/delete-complaint/:id',
   eventController.DeleteComplaint
 );
 
-module.exports = router; 
+module.exports = router;

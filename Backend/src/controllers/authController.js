@@ -2,9 +2,12 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/UserModel");
 const sendOTP = require("../utils/nodemailer");
+const dotenv = require("dotenv");
+dotenv.config();
 
 // Generate random 6-digit OTP
-const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
+const generateOTP = () =>
+  Math.floor(100000 + Math.random() * 900000).toString();
 
 // Step 1: Request OTP
 const requestOtp = async (req, res) => {
@@ -13,7 +16,6 @@ const requestOtp = async (req, res) => {
     if (!email) return res.status(400).json({ message: "Email is required" });
 
     let user = await User.findOne({ email });
-
     if (!user) {
       user = new User({ email }); // Create user entry if not found
     }
@@ -36,8 +38,8 @@ const verifyOtp = async (req, res) => {
   try {
     const { email, otp } = req.body;
     if (!email || !otp) return res.status(400).json({ message: "Email and OTP are required" });
-    const user = await User.findOne({ email });
 
+    const user = await User.findOne({ email });
     if (!user || user.otp !== otp || new Date() > user.otpExpires) {
       return res.status(400).json({ message: "Invalid or expired OTP" });
     }
@@ -58,22 +60,32 @@ const verifyOtp = async (req, res) => {
 const register = async (req, res) => {
   try {
     const { email, password, role } = req.body;
+    const allowedRoles = ["student", "board-member"];
+    if (!allowedRoles.includes(role)) {
+      return res.status(400).json({ message: "Invalid role selected" });
+    }
 
     const user = await User.findOne({ email });
-
     if (!user || !user.isVerified) {
       return res.status(400).json({ message: "OTP verification required before registration" });
     }
 
     if (!password) return res.status(400).json({ message: "Password is required" });
+    if (user.password) return res.status(400).json({ message: "User already registered" });
+
+    if (role === "board-member" && email.split("@")[1] !== "sggs.ac.in") {
+      return res.status(400).json({ message: "Board-member registration requires a valid college email" });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     user.password = hashedPassword;
-    user.isVerified = true; // Ensure user is verified
+    user.role = role;
     await user.save();
 
-    res.status(201).json({ message: "User registered successfully" });
+    const token = jwt.sign({ email: user.email, id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "2d" });
+    res.status(200).json({ message: "Registration successful", token, role: user.role });
   } catch (err) {
+    console.error("Registration error:", err);
     res.status(500).json({ message: "Something went wrong" });
   }
 };
@@ -84,15 +96,12 @@ const login = async (req, res) => {
     const { email, password } = req.body;
     console.log(email, password)
     const user = await User.findOne({ email });
-
     if (!user) return res.status(404).json({ message: "User not found" });
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
-    console.log("matched")
-    const token = jwt.sign({email: user.email, id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "24h" });
-    console.log(jwt)
+    const token = jwt.sign({ email: user.email, id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "2d" });
     res.status(200).json({ message: "Logged in successfully", token });
   } catch (err) {
     res.status(500).json({ message: "Something went wrong", err });

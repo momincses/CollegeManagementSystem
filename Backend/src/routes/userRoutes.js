@@ -13,6 +13,35 @@ router.get("/admin", verifyToken, authorizeRoles("admin"), (req, res) => {
     }
 });
 
+router.get("/faculty", verifyToken, authorizeRoles("faculty"), (req, res) => {
+    try {
+      res.json({ message: "Welcome Faculty" });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  router.get("/student", verifyToken, authorizeRoles("student"), (req, res) => {
+    try {
+      res.json({ message: "Welcome Student" });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  router.get(
+    "/board-member",
+    verifyToken,
+    authorizeRoles("board-member"),
+    (req, res) => {
+      try {
+        res.json({ message: "Welcome Board Member" });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  );
+
 //only doctor can access this router
 router.get("/doctor", verifyToken, authorizeRoles("doctor", "admin"), (req, res) => {
     res.json({ message: "Welcome Doctor" })

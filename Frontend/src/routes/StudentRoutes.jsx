@@ -10,13 +10,28 @@ import StudentSickLeave from "../Components/SickLeave/Student/StudentSickLeave";
 import FacilityBookingPage from "../Components/FacilityBooking/FacilityBookingPage";
 import FacilityDetails from "../Components/FacilityBooking/FacilityDetails";
 // import Logout from "../Components/AdminPageComponents/BoardMemberRoutes/Logout";
+import MyComplaints from "../Components/AdminPageComponents/BoardMemberRoutes/MyComplaints";
+import RegisterComplaint from "../Components/AdminPageComponents/BoardMemberRoutes/RegisterComplaint";
+import PublicComplaints from "../Components/AdminPageComponents/BoardMemberRoutes/PublicComplaints";
+import Logout from "../Components/AdminPageComponents/BoardMemberRoutes/Logout";
 
 const StudentRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<Navbar />}>
-        <Route path="/" element={<StudentHome />} />
+      {/* Main Layout Route with Navbar */}
+      <Route path="/" element={<Navbar><Outlet /></Navbar>}>
+        
+        {/* Dashboard - Accessible to Students */}
+        <Route index element={
+          <ProtectedRoute allowedRoles={["student"]}>
+            <StudentHome />
+          </ProtectedRoute>
+        } />
+
+        {/* Election System */}
         <Route path="/election/*" element={<ElectionRoutes />} />
+
+        {/* Sick Leave Management */}
         <Route path="/sick-leave" element={<StudentSickLeave />} />
         <Route path="/facility-booking" element={<FacilityBookingPage />} />
         <Route path="/facility/:facilityId" element={<FacilityDetails />} />
