@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
   isVerified: { type: Boolean, default: false }, // Stores OTP verification status
   role: { 
     type: String,
-    enum: ["admin", "student", "doctor", "student-coordinator"], 
+    enum: ["admin", "student", "doctor","faculty", "student-coordinator"], 
     default: "student" 
   }, // Default role
 },
@@ -17,3 +17,5 @@ const userSchema = new mongoose.Schema({
   });
 
 module.exports = mongoose.model("User", userSchema);
+
+

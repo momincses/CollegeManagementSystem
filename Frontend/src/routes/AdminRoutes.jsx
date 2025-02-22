@@ -5,7 +5,7 @@ const AdminRoutes = () => {
     <Routes>
       <Route path="/" element={<AdminLayout />}>
         <Route path="events" element={
-          <ProtectedRoute allowedRoles={["admin"]}>
+          <ProtectedRoute allowedRoles={["admin","board-member"]}>
             <EventManagement />
           </ProtectedRoute>
         } />

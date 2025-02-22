@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -10,18 +10,24 @@ import {
   ListItem,
   ListItemText,
   Box,
+  Button,
   Divider,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { motion } from "framer-motion";
 import styles from "./Navbar.module.css";
+import AddIcon from "@mui/icons-material/Add";
+import { useAuth } from '../../../contexts/AuthContext';
 
 const drawerWidth = 240;
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   const toggleMobileDrawer = () => setMobileOpen(!mobileOpen);
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
@@ -35,7 +41,13 @@ const Navbar = () => {
     { text: "Complaints", path: "/student/complaints" },
     { text: "Budget Tracker", path: "/student/budget-tracking" },
     { text: "Cheater Records", path: "/student/cheaters-records" },
+    { text: "My Complaints", path: "/student/my-complaints" },
+    { text: "Register Complaint", path: "/student/register-complaint" },
+    { text: "Public Complaints", path: "/student/public-complaints" },
+    { text: "Logout", path: "/student/logout" },
   ];
+
+  const filteredMenuItems = menuItems;
 
   const drawerContent = (
     <Box sx={{ width: sidebarOpen ? drawerWidth : 70 }}>
@@ -98,7 +110,7 @@ const Navbar = () => {
           borderBottom: "1px solid #e0e0e0",
         }}
       >
-        <Toolbar>
+        {/* <Toolbar>
           <IconButton
             color="inherit"
             edge="start"
@@ -110,7 +122,40 @@ const Navbar = () => {
           <Typography variant="h6" noWrap>
             Campus Management
           </Typography>
+        </Toolbar> */}
+
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          {/* Left side - Title and mobile menu */}
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <IconButton
+              color="inherit"
+              edge="start"
+              onClick={toggleMobileDrawer}
+              sx={{ display: { md: "none" }, mr: 2 }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" noWrap>
+              Student Dashboard
+            </Typography>
+          </Box>
+
+          {/* Right side - Action Buttons */}
+          {user?.role === 'student-coordinator' && (
+            <Button 
+              color="primary"
+              variant="contained"
+              onClick={() => navigate('/student/event-request')}
+              startIcon={<AddIcon />}
+              sx={{ ml: 2 }}
+            >
+              New Event Request
+            </Button>
+          )}
         </Toolbar>
+
+
+
       </AppBar>
 
       {/* 📱 Mobile Drawer */}

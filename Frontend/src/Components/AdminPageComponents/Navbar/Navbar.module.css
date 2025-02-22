@@ -1,0 +1,10 @@
+/* Navbar.module.css */
+.drawerPaper {
+    transition: width 0.3s ease-in-out;
+    overflow-x: hidden;
+  }
+  
+  .burgerAnimation {
+    transition: transform 0.4s ease-in-out;
+  }
+  

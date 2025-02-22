@@ -7,30 +7,57 @@ import EventRequestForm from '../Components/events/EventRequestForm';
 import ProtectedRoute from "../utils/ProtectedRoute";
 import EventsList from '../Components/events/EventsList';
 import StudentSickLeave from "../Components/SickLeave/Student/StudentSickLeave";
+import MyComplaints from "../Components/AdminPageComponents/BoardMemberRoutes/MyComplaints";
+import RegisterComplaint from "../Components/AdminPageComponents/BoardMemberRoutes/RegisterComplaint";
+import PublicComplaints from "../Components/AdminPageComponents/BoardMemberRoutes/PublicComplaints";
+import Logout from "../Components/AdminPageComponents/BoardMemberRoutes/Logout";
 
-const StudentRoutes = () => { 
+const StudentRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<Navbar />}>
-        <Route path="/" element={<StudentHome />} />
-        <Route path="/election/*" element={<ElectionRoutes />} />
-        <Route path="/sick-leave" element={<StudentSickLeave />} />
-        {/* 🔥 Add more routes here as needed */}
+      {/* Main Layout Route with Navbar */}
+      <Route path="/" element={<Navbar><Outlet /></Navbar>}>
+        
+        {/* Dashboard - Accessible to Students */}
+        <Route index element={
+          <ProtectedRoute allowedRoles={["student"]}>
+            <StudentHome />
+          </ProtectedRoute>
+        } />
 
-        {/* Event System Routes */}
-        {/* View Events - Accessible to all roles */}
+        {/* Election System */}
+        <Route path="/election/*" element={<ElectionRoutes />} />
+
+        {/* Sick Leave Management */}
+        <Route path="/sick-leave" element={<StudentSickLeave />} />
+
+        {/* Complaints System */}
+        <Route path="/my-complaints" element={<MyComplaints />} />
+        <Route path="/register-complaint" element={
+          <ProtectedRoute allowedRoles={["student"]}>
+            <RegisterComplaint />
+          </ProtectedRoute>
+        } />
+        <Route path="/public-complaints" element={
+          <ProtectedRoute allowedRoles={["student"]}>
+            <PublicComplaints />
+          </ProtectedRoute>
+        } />
+
+        {/* Event System */}
         <Route path="/events" element={
           <ProtectedRoute allowedRoles={["student", "student-coordinator", "admin"]}>
             <EventsList />
           </ProtectedRoute>
         } />
-        
-        {/* Create Event Request - Only for student coordinators */}
         <Route path="/student-coordinator/event-request" element={
-          // <ProtectedRoute >
+          <ProtectedRoute allowedRoles={["student-coordinator"]}>
             <EventRequestForm />
-          // </ProtectedRoute>
-        }/>
+          </ProtectedRoute>
+        } />
+
+        {/* Logout */}
+        <Route path="/logout" element={<Logout />} />
       </Route>
     </Routes>
   );

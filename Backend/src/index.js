@@ -31,6 +31,11 @@ app.use(cors({
 }));
 
 
+// app.use(cors());
+// app.options('*', cors()); // Enable preflight for all routes
+
+
+
 // Routes
 
 //Auth Routes
