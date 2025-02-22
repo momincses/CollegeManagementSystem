@@ -2,9 +2,13 @@ const jwt = require("jsonwebtoken");
 const StudentCoordinator = require("../models/StudentCoordinator");
 const ClassCoordinator = require("../models/ClassCoordinator");
 
-// Generate JWT
-const generateToken = (id, role) => {
-  return jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: "7d" });
+
+const generateToken = (userId, email, role) => {
+  return jwt.sign(
+    { userId, email, role }, // ✅ Matching frontend expectations
+    process.env.JWT_SECRET,
+    { expiresIn: '7d' }
+  );
 };
 
 // Signup via Invitation Link
@@ -53,6 +57,7 @@ exports.loginStudentCoordinator = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
 
     const token = generateToken(user._id, email, "student-coordinator");
+    console.log(user._id)
     res.status(200).json({ success: true, token });
   } catch (error) {
     res.status(500).json({ message: "Login failed", error });

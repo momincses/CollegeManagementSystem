@@ -50,7 +50,7 @@ const VotingBooth = () => {
       
       if (data.hasVoted) {
         setHasVoted(true);
-        navigate('/election/results');
+        navigate('/student/election/results');
       }
     } catch (err) {
       setError('Failed to check voting status');

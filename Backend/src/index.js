@@ -7,12 +7,15 @@ const authRoutes = require("./routes/authRoutes")
 const userRoutes = require("./routes/userRoutes")
 const electionRoutes = require("./routes/electionRoutes");
 const eventRoutes = require("./routes/eventRoutes");
+const facilityRoutes = require("./routes/facilityRoutes");
 const coordinatorRoutes = require("../src/routes/coordinatorRoutes")
 const http = require('http');
 const setupSocket = require('./socket/electionSocket');
 
+
 //Sick leave routes
 const sickLeaveRoutes = require("../src/routes/sickLeaveRoutes")
+
 
 
 const app = express();
@@ -25,7 +28,7 @@ dbConnect();
 app.use(express.json()); 
 // Allow requests from frontend
 app.use(cors({
-  origin: "http://localhost:5173", // Replace with frontend URL in production
+  origin: "http://localhost:5174", // Replace with frontend URL in production
   methods: "GET,POST,PUT,DELETE",
   allowedHeaders: "Content-Type,Authorization"
 }));
@@ -51,6 +54,8 @@ app.use("/api/", sickLeaveRoutes);
 // Coordinator Auth Routes
 app.use("/api/coordinator", coordinatorRoutes);
 
+// 🔗 Route Linking
+app.use('/api/facility', facilityRoutes);
 
 // Add after other routes
 app.get("/api/test", (req, res) => {

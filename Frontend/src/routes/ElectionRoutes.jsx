@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate, Link } from 'react-router-dom';
-import { Button, Stack } from '@mui/material';
+import { Box, Button, Stack } from '@mui/material';
+import { styled } from '@mui/system';
 
 import CandidateList from "../Components/election/student/CandidateList";
 import VotingBooth from '../Components/election/student/VotingBooth';
@@ -8,36 +9,73 @@ import ElectionDashboard from '../Components/election/admin/ElectionDashboard';
 import ResultsDisplay from '../Components/election/common/ResultsDisplay';
 import ProtectedRoute from '../utils/ProtectedRoute';
 
-const NavigationButtons = ({ userRole }) => {
-  return (
-    <Stack direction="row" spacing={2} sx={{ mb: 3, mt: 2 }}>
-      <Button component={Link} to="/student/election/candidates" variant="contained" color="primary">
-        View Candidates
-      </Button>
-      <Button component={Link} to="/student/election/vote" variant="contained" color="primary">
-        Vote Now
-      </Button>
-      <Button component={Link} to="/student/election/results" variant="contained" color="primary">
-        View Results
-      </Button>
-      {userRole === 'admin' && (
-        <Button component={Link} to="/student/election/dashboard" variant="contained" color="secondary">
-          Admin Dashboard
-        </Button>
-      )}
-    </Stack>
-  );
-};
+// 🌿 Professional Button Style
+const StyledButton = styled(Button)(({ theme }) => ({
+  padding: '8px 22px',
+  borderRadius: '20px',
+  backgroundColor: '#F5F5F5',
+  color: '#333',
+  fontWeight: '500',
+  fontSize: '15px',
+  textTransform: 'none',
+  boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.05)',
+  transition: 'all 0.2s ease-in-out',
+  '&:hover': {
+    backgroundColor: '#E0E0E0',
+    transform: 'translateY(-2px)',
+    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.08)',
+  },
+}));
+
+// 🖋️ Seamless Navbar Wrapper
+const NavWrapper = styled(Box)({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: '15px 0',
+  backgroundColor: '#FFFFFF',
+  position: 'sticky',
+  top: 0,
+  zIndex: 10,
+});
 
 const ElectionRoutes = () => {
-  // You'll need to get the actual user role from your auth context
   const userRole = 'admin'; // This should come from your auth context
 
   return (
-    <>
-      <NavigationButtons userRole={userRole} />
+    <Box sx={{ display: "flex", flexDirection: "column", alignItems:"flex-start", width: '100%' }}>
+      {/* 🎨 Professional Navigation Bar */}
+      <NavWrapper>
+        <Stack direction="row" spacing={2}>
+          <Link to="/student/election/candidates">
+            <StyledButton>View Candidates</StyledButton>
+          </Link>
+          <Link to="/student/election/vote">
+            <StyledButton>Vote Now</StyledButton>
+          </Link>
+          <Link to="/student/election/results">
+            <StyledButton>View Results</StyledButton>
+          </Link>
+          {userRole === 'admin' && (
+            <Link to="/student/election/dashboard">
+              <StyledButton
+                sx={{
+                  backgroundColor: '#1565C0',
+                  color: '#FFFFFF',
+                  '&:hover': {
+                    backgroundColor: '#0D47A1',
+                  },
+                }}
+              >
+                Admin Dashboard
+              </StyledButton>
+            </Link>
+          )}
+        </Stack>
+      </NavWrapper>
+
+      {/* 📜 Routes Section */}
       <Routes>
-        {/* Student Routes */}
         <Route
           path="vote"
           element={
@@ -62,8 +100,6 @@ const ElectionRoutes = () => {
             </ProtectedRoute>
           }
         />
-
-        {/* Admin Routes */}
         <Route
           path="dashboard"
           element={
@@ -72,12 +108,10 @@ const ElectionRoutes = () => {
             </ProtectedRoute>
           }
         />
-
-        {/* Default Route */}
-        <Route path="*" element={<Navigate to="/election/candidates" replace />} />
+        <Route path="*" element={<Navigate to="candidates" replace />} />
       </Routes>
-    </>
+    </Box>
   );
 };
 
-export default ElectionRoutes; 
+export default ElectionRoutes;

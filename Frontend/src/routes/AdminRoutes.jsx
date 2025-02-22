@@ -1,4 +1,5 @@
 import EventManagement from '../Components/admin/EventManagement';
+import AdminFacilityPanel from '../Components/FacilityBooking/AdminFacilityPanel';
 
 const AdminRoutes = () => {
   return (
@@ -9,6 +10,7 @@ const AdminRoutes = () => {
             <EventManagement />
           </ProtectedRoute>
         } />
+        
       </Route>
     </Routes>
   );

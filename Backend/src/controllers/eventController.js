@@ -1,19 +1,23 @@
 const EventRequest = require("../models/EventRequestModel");
+const StudentCoordinator = require("../models/StudentCoordinator");
 const User = require("../models/UserModel");
 
 /**
  * Event Controller
  * Handles all event-related operations
  */
-const eventController = {
   // Create new event request
-  createRequest: async (req, res) => {
+  const createRequest =  async (req, res) => {
     try {
       const { eventName, eventType, date, venue, description, expectedAttendees, budget, organizerContact } = req.body;
-      
+      console.log(eventName, eventType, date, venue, description, expectedAttendees, budget, organizerContact)
       // Verify user is a student coordinator
-      const coordinator = await User.findById(req.user.id);
+      console.log("User ID from token:", req.body.coordinatorId);
+
+      const coordinator = await StudentCoordinator.findById(req.body.coordinatorId);
+      console.log(coordinator);
       if (coordinator.role !== 'student-coordinator') {
+        console.log("Only student coordinators can create event requests")
         return res.status(403).json({ message: 'Only student coordinators can create event requests' });
       }
 
@@ -26,18 +30,21 @@ const eventController = {
         expectedAttendees,
         budget,
         organizerContact,
-        coordinatorId: req.user.id
+        coordinatorId: req.body.coordinatorId
       });
+
+      console.log(eventRequest)
 
       await eventRequest.save();
       res.status(201).json({ message: 'Event request created successfully', eventRequest });
     } catch (error) {
+      console.log(error.message)
       res.status(500).json({ message: 'Error creating event request', error: error.message });
     }
-  },
+  }
 
   // Get all events (with optional filters)
-  getEvents: async (req, res) => {
+  const getEvents = async (req, res) => {
     try {
       const { status, type } = req.query;
       let query = {};
@@ -59,10 +66,10 @@ const eventController = {
     } catch (error) {
       res.status(500).json({ message: 'Error fetching events', error: error.message });
     }
-  },
+  }
 
   // Update event request status (admin only)
-  updateEventStatus: async (req, res) => {
+  const updateEventStatus = async (req, res) => {
     try {
       const { eventId } = req.params;
       const { status, adminComments } = req.body;
@@ -85,10 +92,10 @@ const eventController = {
     } catch (error) {
       res.status(500).json({ message: 'Error updating event status', error: error.message });
     }
-  },
+  }
 
   // Get event details by ID
-  getEventById: async (req, res) => {
+  const getEventById = async (req, res) => {
     try {
       const { eventId } = req.params;
       const event = await EventRequest.findById(eventId)
@@ -103,6 +110,5 @@ const eventController = {
       res.status(500).json({ message: 'Error fetching event details', error: error.message });
     }
   }
-};
 
-module.exports = eventController; 
+module.exports = { getEventById, updateEventStatus, getEvents, createRequest }; 

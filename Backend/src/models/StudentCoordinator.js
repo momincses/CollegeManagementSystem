@@ -6,6 +6,8 @@ const studentCoordinatorSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   club: { type: String, required: true },
+  role: { type: String, default: 'student-coordinator' }, // ✅ Added role field
+
 });
 
 // Hash password before saving

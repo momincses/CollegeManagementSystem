@@ -31,7 +31,7 @@ const LoginPage = () => {
       const data = await response.json();
       if (response.ok) {
         localStorage.setItem("coordinatorAuthToken", data.token);
-        navigate(-1); // Redirect back to event request page
+        navigate("/student/student-coordinator/event-request"); // Redirect back to event request page
       }else {
         setError(data.message || "Login failed.");
       }

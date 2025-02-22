@@ -7,7 +7,8 @@ const AdminHome = () => {
   return (
     <div>
       <Button>
-        <Link to="/coordinator/admin-invite">Dashboard</Link>
+        <Link to="/coordinator/admin-invite">admin invite</Link>
+        <Link to="/admin/facilities-panel">admin facility</Link>
       </Button>
     </div>
   )

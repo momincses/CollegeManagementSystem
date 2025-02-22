@@ -7,7 +7,7 @@ const authorizeRoles = require('../middleware/roleMiddleware');
 // Create event request (student coordinator only)
 router.post('/request', 
   verifyToken, 
-  authorizeRoles('student-coordinator'), 
+  // authorizeRoles('student-coordinator'), 
   eventController.createRequest
 );
 

@@ -16,6 +16,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import UnauthorizedPage from "./components/common/UnauthorizedPage";
 import StudentRoutes from "./routes/StudentRoutes";
 import CoordinatorRoutes from "./routes/CoordinatorRoutes";
+import AdminFacilityPanel from "./Components/FacilityBooking/AdminFacilityPanel";
 
 // Remove or comment out these imports until you create the components
 // import Navbar from './components/common/Navbar';
@@ -63,6 +64,11 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          <Route path="/admin/facilities-panel" element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <AdminFacilityPanel />
+          </ProtectedRoute>
+        } />
           <Route
             path="/doctor"
             element={

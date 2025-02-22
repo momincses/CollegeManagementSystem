@@ -32,9 +32,11 @@ const EventRequestForm = () => {
       try {
         const decodedUser = jwtDecode(token); // ✅ Decode using jwt-decode
         if (decodedUser && decodedUser.email && decodedUser.userId) {
-          setUser(decodedUser); // Set user only if valid
+          setUser(decodedUser); 
+          console.log(decodedUser)
         } else {
-          localStorage.removeItem('coordinatorAuthToken');
+          console.log("unable to decode : ", token)
+          // localStorage.removeItem('coordinatorAuthToken');
           navigate('/coordinator/student-coordinator/login');
         }
       } catch (error) {
@@ -67,6 +69,7 @@ const EventRequestForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    console.log(formData)
     try {
       const token = localStorage.getItem('coordinatorAuthToken');
       const response = await fetch('http://localhost:5000/api/events/request', {
@@ -74,7 +77,7 @@ const EventRequestForm = () => {
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ ...formData, coordinatorId: user.userId })
       });
-
+console.log(user.userId)
       const data = await response.json();
       if (response.ok) {
         setSuccess(true);
