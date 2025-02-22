@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import Modal from './Modal';
+import Modal from '../Components/common/Modal';
 
 const BudgetTracking = ({ eventId, userRole }) => {
   const [expenditures, setExpenditures] = useState([]);
