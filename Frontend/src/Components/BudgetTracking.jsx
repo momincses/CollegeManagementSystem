@@ -1,6 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Modal from '../Components/common/Modal';
+import { 
+  Box, 
+  Typography, 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableContainer, 
+  TableHead, 
+  TableRow, 
+  Paper,
+  IconButton,
+  Alert
+} from '@mui/material';
+import { Delete as DeleteIcon } from '@mui/icons-material';
+import { useParams } from 'react-router-dom';
 
 const BudgetTracking = ({ eventId, userRole }) => {
   const [expenditures, setExpenditures] = useState([]);
@@ -8,16 +23,53 @@ const BudgetTracking = ({ eventId, userRole }) => {
   const [loading, setLoading] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedReceipt, setSelectedReceipt] = useState(null);
+  const [error, setError] = useState('');
+  const { eventId: urlEventId } = useParams();
 
   const fetchExpenditures = async () => {
-    try { 
-      const response = await axios.get(`/api/events/${eventId}/expenditures`);
-      setExpenditures(response.data.expenditures);
-      setTotalSpent(response.data.totalSpent);
-    } catch (error) {
-      console.error('Failed to fetch expenditures:', error);
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`http://localhost:5000/api/expenditures/${urlEventId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch expenditures');
+      }
+
+      const data = await response.json();
+      setExpenditures(data.expenditures);
+      setTotalSpent(data.totalSpent);
+    } catch (err) {
+      setError(err.message);
     }
   };
+
+  const handleDelete = async (id) => {
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`http://localhost:5000/api/expenditures/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete expenditure');
+      }
+
+      fetchExpenditures(); // Refresh the list
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchExpenditures();
+  }, [urlEventId]);
 
   // Budget Summary Card Component
   const BudgetSummaryCard = () => (
@@ -124,40 +176,51 @@ const BudgetTracking = ({ eventId, userRole }) => {
       )}
 
       {/* Expenditure List */}
-      <div className="expenditure-list">
-        <h3>Expenditure History</h3>
-        {loading ? (
-          <div className="loading-spinner">Loading...</div>
-        ) : expenditures.length === 0 ? (
-          <div className="no-data">No expenditures recorded yet</div>
-        ) : (
-          expenditures.map(exp => (
-            <div key={exp._id} className="expenditure-card">
-              <div className="exp-details">
-                <h4>{exp.description}</h4>
-                <p className="amount">₹{exp.amount}</p>
-                <p className="date">{new Date(exp.date).toLocaleDateString()}</p>
-              </div>
-              <div className="exp-actions">
-                <button 
-                  className="view-btn"
-                  onClick={() => setSelectedReceipt(exp)}
-                >
-                  <i className="fas fa-eye"></i> View Receipt
-                </button>
-                {userRole === 'student-coordinator' && (
-                  <button 
-                    className="delete-btn"
-                    onClick={() => handleDelete(exp._id)}
-                  >
-                    <i className="fas fa-trash"></i>
-                  </button>
-                )}
-              </div>
-            </div>
-          ))
-        )}
-      </div>
+      <Box sx={{ maxWidth: 800, mx: 'auto', p: 3 }}>
+        <Typography variant="h4" gutterBottom>
+          Expenditures
+        </Typography>
+
+        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+
+        <Typography variant="h6" gutterBottom>
+          Total Spent: ₹{totalSpent}
+        </Typography>
+
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Description</TableCell>
+                <TableCell>Amount</TableCell>
+                <TableCell>Submitted By</TableCell>
+                <TableCell>Date</TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {expenditures.map((exp) => (
+                <TableRow key={exp._id}>
+                  <TableCell>{exp.description}</TableCell>
+                  <TableCell>₹{exp.amount}</TableCell>
+                  <TableCell>{exp.submittedBy?.email}</TableCell>
+                  <TableCell>
+                    {new Date(exp.createdAt).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>
+                    <IconButton
+                      onClick={() => handleDelete(exp._id)}
+                      color="error"
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
 
       {/* Export/Print Section */}
       <div className="export-section">
