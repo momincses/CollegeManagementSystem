@@ -1,99 +1,92 @@
 import React, { useState } from 'react';
+import { Box, Button, TextField, Typography, Alert } from '@mui/material';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const CreateExpenditure = () => {
-  const [expenditure, setExpenditure] = useState({
-    title: '',
-    amount: '',
-    description: '',
-    date: '',
-    category: '' 
-  });
+  const [description, setDescription] = useState('');
+  const [amount, setAmount] = useState('');
+  const [receipt, setReceipt] = useState(null);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const navigate = useNavigate();
+  const { eventId } = useParams();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Implement expenditure creation logic
-    console.log('Expenditure data:', expenditure);
-  };
+    try {
+      const formData = new FormData();
+      formData.append('description', description);
+      formData.append('amount', amount);
+      if (receipt) {
+        formData.append('receipt', receipt);
+      }
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setExpenditure(prev => ({
-      ...prev,
-      [name]: value
-    }));
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`http://localhost:5000/api/expenditures/${eventId}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create expenditure');
+      }
+
+      setSuccess('Expenditure added successfully');
+      setTimeout(() => navigate(`/expenditure/list/${eventId}`), 2000);
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Create New Expenditure</h2>
-      <form onSubmit={handleSubmit} className="max-w-md">
-        <div className="mb-4">
-          <label className="block mb-2">Title</label>
-          <input
-            type="text"
-            name="title"
-            value={expenditure.title}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2">Amount</label>
-          <input
-            type="number"
-            name="amount"
-            value={expenditure.amount}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2">Description</label>
-          <textarea
-            name="description"
-            value={expenditure.description}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2">Date</label>
-          <input
-            type="date"
-            name="date"
-            value={expenditure.date}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2">Category</label>
-          <select
-            name="category"
-            value={expenditure.category}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          >
-            <option value="">Select Category</option>
-            <option value="food">Food</option>
-            <option value="transportation">Transportation</option>
-            <option value="supplies">Supplies</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
-        <button
+    <Box sx={{ maxWidth: 600, mx: 'auto', p: 3 }}>
+      <Typography variant="h4" gutterBottom>
+        Add Expenditure
+      </Typography>
+
+      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+      {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
+
+      <form onSubmit={handleSubmit}>
+        <TextField
+          fullWidth
+          label="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          required
+          sx={{ mb: 2 }}
+        />
+
+        <TextField
+          fullWidth
+          label="Amount"
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          required
+          sx={{ mb: 2 }}
+        />
+
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setReceipt(e.target.files[0])}
+          style={{ marginBottom: 16 }}
+        />
+
+        <Button
           type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          variant="contained"
+          color="primary"
+          fullWidth
         >
-          Create Expenditure
-        </button>
+          Add Expenditure
+        </Button>
       </form>
-    </div>
+    </Box>
   );
 };
 

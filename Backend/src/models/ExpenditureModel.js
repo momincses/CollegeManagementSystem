@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 const expenditureSchema = new mongoose.Schema({
   eventId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -26,3 +28,6 @@ const expenditureSchema = new mongoose.Schema({
     default: 'pending'
   }
 }); 
+
+const Expenditure = mongoose.model('Expenditure', expenditureSchema);
+module.exports = Expenditure; 

@@ -20,6 +20,7 @@ import CreateExpenditure from './Components/CreateExpenditure';
 import ExpenditureList from './Components/BudgetTracking';
 import CoordinatorRoutes from "./routes/CoordinatorRoutes";
 import AdminFacilityPanel from "./Components/FacilityBooking/AdminFacilityPanel";
+import EventDetail from './Components/EventDetail';
 
 // Remove or comment out these imports until you create the components
 // import Navbar from './components/common/Navbar';
@@ -131,6 +132,15 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <ExpenditureList />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route 
+            path="/events/:eventId" 
+            element={
+              <ProtectedRoute allowedRoles={["admin", "student-coordinator", "board-member"]}>
+                <EventDetail />
               </ProtectedRoute>
             }
           />
