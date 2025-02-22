@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Outlet } from "react-router-dom";
+import { Routes, Route, Outlet, Navigate } from "react-router-dom";
 import Navbar from "../Components/StudentPageComponents/Navbar/Navbar";
 import StudentHome from "../Pages/StudentHome/StudentHome";
 import ElectionRoutes from "./ElectionRoutes";
@@ -19,14 +19,11 @@ const StudentRoutes = () => {
   return (
     <Routes>
       {/* Main Layout Route with Navbar */}
-      <Route path="/" element={<Navbar><Outlet /></Navbar>}>
+      <Route path="/" element={<Navbar/>}>
         
         {/* Dashboard - Accessible to Students */}
-        <Route index element={
-          <ProtectedRoute allowedRoles={["student"]}>
-            <StudentHome />
-          </ProtectedRoute>
-        } />
+        {/* Redirect from root to /dashboard */}
+        <Route path="/" element={<StudentHome />} />
 
         {/* Election System */}
         <Route path="/election/*" element={<ElectionRoutes />} />
@@ -36,9 +33,10 @@ const StudentRoutes = () => {
         <Route path="/facility-booking" element={<FacilityBookingPage />} />
         <Route path="/facility/:facilityId" element={<FacilityDetails />} />
         {/* <Route path="/track-booking" element={<TrackBooking />} /> */}
-        {/* 🔥 Add more routes here as needed */}
+
+
         {/* Complaints System */}
-        {/* <Route path="/my-complaints" element={<MyComplaints />} />
+        <Route path="/my-complaints" element={<MyComplaints />} />
         <Route
           path="/register-complaint"
           element={
@@ -54,7 +52,7 @@ const StudentRoutes = () => {
               <PublicComplaints />
             </ProtectedRoute>
           }
-        /> */}
+        />
 
         {/* Event System Routes */}
         {/* View Events - Accessible to all roles */}
@@ -79,7 +77,10 @@ const StudentRoutes = () => {
           }
         />
         {/* <Route path="/logout" element={<Logout />} /> */}
+        
+      <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
+
     </Routes>
   );
 };

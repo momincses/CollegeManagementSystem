@@ -1,16 +1,15 @@
-const EventRequest = require("../models/EventRequestModel.js");
-const User = require("../models/usermodel.js");
-const Complaint = require("../models/complaintModel.js");
-const { isComplaintClean } = require("../utils/moderation.js");
+const User = require("../models/usermodel");
+const Complaint = require("../models/complaintModel");
+const { isComplaintClean } = require("../utils/moderations");
 const mongoose = require("mongoose");
 
 /**
  * Event Controller
  * Handles all event-related operations
  */
-const eventController = {
   // Create new event request
-  getAllComplaints: async (req, res) => {
+  const getAllComplaints = async (req, res) => {
+    console.log("i am in getAllComplaints")
     try {
       const userComplaints = await Complaint.find({});
       if (userComplaints.length === 0) {
@@ -20,14 +19,16 @@ const eventController = {
     } catch (error) {
       res.status(500).json({ message: 'Error fetching details', error: error.message });
     }
-  },
+  }
 
-  // Get all events (with optional filters)
-  getApprovedComplaints: async (req, res) => {
+//   Get all events (with optional filters)
+  const getApprovedComplaints = async (req, res) => {
+    console.log("in getapproved complainets")
     try {
-      const { id } = req.params;
+    //   const { id } = req.params;
       const status = "public";
       const userComplaints = await Complaint.find({ status });
+      console.log(userComplaints);
       if (userComplaints.length === 0) {
         return res.status(404).json({ message: "No Complaint Registered Yet!" });
       }
@@ -35,10 +36,10 @@ const eventController = {
     } catch (error) {
       res.status(500).json({ message: 'Error fetching details', error: error.message });
     }
-  },
+  }
 
   // Update event request status (admin only)
-  getFlaggedComplaints: async (req, res) => {
+  const getFlaggedComplaints = async (req, res) => {
     try {
       const { id } = req.params;
       const status = "flagged";
@@ -50,10 +51,10 @@ const eventController = {
     } catch (error) {
       res.status(500).json({ message: 'Error fetching details', error: error.message });
     }
-  },
+  }
 
   // Get event details by ID
-  getUserComplaints: async (req, res) => {
+  const getUserComplaints = async (req, res) => {
     try {
       const { id } = req.params;
       const userComplaints = await Complaint.find({ submitted_by: new mongoose.Types.ObjectId(id) });
@@ -65,10 +66,10 @@ const eventController = {
     } catch (error) {
       res.status(500).json({ message: 'Error fetching details', error: error.message });
     }
-  },
+  }
 
   // Get event details by ID
-  RegisterComplaint: async (req, res) => {
+  const RegisterComplaint = async (req, res) => {
     try {
       const { id } = req.params;
       let {
@@ -105,10 +106,10 @@ const eventController = {
       console.log(error)
       res.status(500).json({ message: 'Error fetching details', error: error.message });
     }
-  },
+  }
 
   // Get event details by ID
-  ModifyComplaint: async (req, res) => {
+  const ModifyComplaint = async (req, res) => {
     try {
       // const { id } = req.params;
       let {
@@ -136,10 +137,10 @@ const eventController = {
       console.log(error)
       res.status(500).json({ message: 'Error fetching details', error: error.message });
     }
-  },
+  }
 
   // Get event details by ID
-  DeleteComplaint: async (req, res) => {
+  const DeleteComplaint = async (req, res) => {
     try {
       const { id } = req.params;
       const complaint = await Complaint.findById({ _id: new mongoose.Types.ObjectId(id) });
@@ -155,7 +156,7 @@ const eventController = {
       console.log(error)
       res.status(500).json({ message: 'Error fetching details', error: error.message });
     }
-  },
-};
+  }
 
-module.exports = eventController;
+
+module.exports = {getAllComplaints, DeleteComplaint, ModifyComplaint, getUserComplaints, RegisterComplaint, getFlaggedComplaints, getApprovedComplaints}

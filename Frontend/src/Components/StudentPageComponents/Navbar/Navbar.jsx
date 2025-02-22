@@ -38,7 +38,7 @@ const Navbar = () => {
     { text: "Sick Leave", path: "/student/sick-leave" },
     { text: "Facility Booking", path: "/student/facility-booking" },
     { text: "Event Requests", path: "/student/events" },
-    { text: "Complaints", path: "/student/complaints" },
+    { text: "Complaints", path: "/student/public-complaints" },
     { text: "Budget Tracker", path: "/student/budget-tracking" },
     { text: "Cheater Records", path: "/student/cheaters-records" },
     { text: "My Complaints", path: "/student/my-complaints" },

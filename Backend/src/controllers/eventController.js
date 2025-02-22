@@ -1,6 +1,6 @@
 const EventRequest = require("../models/EventRequestModel");
 const StudentCoordinator = require("../models/StudentCoordinator");
-const User = require("../models/UserModel");
+// const User = require("../models/usermodel");
 
 /**
  * Event Controller

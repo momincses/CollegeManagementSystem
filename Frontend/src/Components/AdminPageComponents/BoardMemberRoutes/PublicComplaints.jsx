@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, CircularProgress } from "@mui/material";
 
-const API_BASE_URL = "http://localhost:5000/api/events";
+const API_BASE_URL = "http://localhost:5000/api/complaints";
 
 const PublicComplaints = () => {
     const [complaints, setComplaints] = useState([]);

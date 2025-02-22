@@ -7,6 +7,7 @@ const authRoutes = require("./routes/authRoutes")
 const userRoutes = require("./routes/userRoutes")
 const electionRoutes = require("./routes/electionRoutes");
 const eventRoutes = require("./routes/eventRoutes");
+const complaintRoutes = require("./routes/complaintRoutes");
 const facilityRoutes = require("./routes/facilityRoutes");
 const coordinatorRoutes = require("../src/routes/coordinatorRoutes")
 const http = require('http');
@@ -28,7 +29,7 @@ dbConnect();
 app.use(express.json()); 
 // Allow requests from frontend
 app.use(cors({
-  origin: "http://localhost:5174", // Replace with frontend URL in production
+  origin: "http://localhost:5173", // Replace with frontend URL in production
   methods: "GET,POST,PUT,DELETE",
   allowedHeaders: "Content-Type,Authorization"
 }));
@@ -52,6 +53,9 @@ app.use("/api/election", electionRoutes);
 
 // Add event management routes
 app.use("/api/events", eventRoutes);
+
+// Add event management routes
+app.use("/api/complaints", complaintRoutes);
 
 //sick Leave routes
 app.use("/api/", sickLeaveRoutes);

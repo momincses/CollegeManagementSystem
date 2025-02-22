@@ -13,7 +13,6 @@ import StudentHome from "./Pages/StudentHome/StudentHome";
 import AdminHome from "./Pages/AdminHome/AdminHome";
 import DoctorHome from "./Pages/DoctorHome/DoctorHome";
 import BoardMemberRoutes from "./routes/BoardMembersRoutes";
-import CoordinatorRoutes from "./routes/CoordinatorRoutes";
 import { AuthProvider } from "./contexts/AuthContext";
 import UnauthorizedPage from "./components/common/UnauthorizedPage";
 import StudentRoutes from "./routes/StudentRoutes";
@@ -53,14 +52,7 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/student"
-            element={
-              <ProtectedRoute allowedRoles={["student"]}>
-                <StudentHome />
-              </ProtectedRoute>
-            }
-          />
+          
 
           {/* Coordinator Routes */}
           <Route

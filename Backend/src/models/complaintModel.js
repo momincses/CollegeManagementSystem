@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema(
+const ComplaintsSchema = new mongoose.Schema(
   {
     title: { type: String },
     description: { type: String },
@@ -14,4 +14,4 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("anonymous_complaints", userSchema);
+module.exports = mongoose.model("anonymous_complaints", ComplaintsSchema);
