@@ -105,7 +105,7 @@ const EventManagement = () => {
   if (loading) return <SquareLoader />;
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={{ p: 3, width:"100%" }}>
       <Typography variant="h4" gutterBottom>
         Event Requests Management
       </Typography>

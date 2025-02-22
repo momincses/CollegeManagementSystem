@@ -3,17 +3,17 @@ import { Box, Button, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 const exploreItems = [
-  { label: "Elections", path: "/student/election/candidates" },
-  { label: "Sick Leave", path: "/student/sick-leave" },
-  { label: "Facility Booking", path: "/student/facility-booking" },
-  { label: "Event Requests", path: "/student/events" },
-  { label: "Complaints", path: "/student/complaints" },
-  { label: "Budget Tracker", path: "/student/budget-tracking" },
-  { label: "Cheater Records", path: "/student/budget-tracking" },
-  { label: "My Complaints", path: "/student/my-complaints" },
-  { label: "Register Complaint", path: "/student/register-complaint" },
-  { label: "Public Complaints", path: "/student/public-complaints" },
-  { label: "Logout", path: "/student/logout" },
+  { text: "Dashboard", path: "/student" },
+  { text: "Elections", path: "/student/election/candidates" },
+  { text: "Sick Leave", path: "/student/sick-leave" },
+  { text: "Facility Booking", path: "/student/allfacilities" },
+  { text: "Event Requests", path: "/student/events" },
+  { text: "Complaints", path: "/student/public-complaints" },
+  { text: "Budget Tracker", path: "/student/expenditure/list" },
+  { text: "Cheater Records", path: "/student/cheaters-records" },
+  { text: "My Complaints", path: "/student/my-complaints" },
+  { text: "Register Complaint", path: "/student/register-complaint" },
+  { text: "Public Complaints", path: "/student/public-complaints" },
 ];
 
 const ExploreSection = () => {

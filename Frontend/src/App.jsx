@@ -16,6 +16,7 @@ import BoardMemberRoutes from "./routes/BoardMembersRoutes";
 import { AuthProvider } from "./contexts/AuthContext";
 import UnauthorizedPage from "./components/common/UnauthorizedPage";
 import StudentRoutes from "./routes/StudentRoutes";
+import AdminRoutes from "./routes/AdminRoutes"
 import CreateExpenditure from './Components/CreateExpenditure';
 import ExpenditureList from './Components/BudgetTracking';
 import CoordinatorRoutes from "./routes/CoordinatorRoutes";
@@ -70,10 +71,10 @@ const App = () => {
 
           {/* Admin Routes */}
           <Route
-            path="/admin"
+            path="/admin/*"
             element={
               <ProtectedRoute allowedRoles={["admin"]}>
-                <AdminHome />
+                <AdminRoutes />
               </ProtectedRoute>
             }
           />
@@ -94,14 +95,14 @@ const App = () => {
           />
 
           {/* Board Member Routes */}
-          <Route
+          {/* <Route
             path="/board-member"
             element={
               <ProtectedRoute allowedRoles={["board-member"]}>
                 <AdminHome />
               </ProtectedRoute>
             }
-          />
+          /> */}
           <Route
             path="/board-member/*"
             element={

@@ -59,11 +59,8 @@ const verifyOtp = async (req, res) => {
 // Step 3: Register user after OTP verification
 const register = async (req, res) => {
   try {
-    const { email, password, role } = req.body;
-    const allowedRoles = ["student", "board-member"];
-    if (!allowedRoles.includes(role)) {
-      return res.status(400).json({ message: "Invalid role selected" });
-    }
+    const { email, password } = req.body; // Removed role from req.body
+    const role = "student"; // Default role
 
     const user = await User.findOne({ email });
     if (!user || !user.isVerified) {
@@ -73,16 +70,17 @@ const register = async (req, res) => {
     if (!password) return res.status(400).json({ message: "Password is required" });
     if (user.password) return res.status(400).json({ message: "User already registered" });
 
-    if (role === "board-member" && email.split("@")[1] !== "sggs.ac.in") {
-      return res.status(400).json({ message: "Board-member registration requires a valid college email" });
-    }
-
     const hashedPassword = await bcrypt.hash(password, 10);
     user.password = hashedPassword;
     user.role = role;
     await user.save();
 
-    const token = jwt.sign({ email: user.email, id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "2d" });
+    const token = jwt.sign(
+      { email: user.email, id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "2d" }
+    );
+
     res.status(200).json({ message: "Registration successful", token, role: user.role });
   } catch (err) {
     console.error("Registration error:", err);

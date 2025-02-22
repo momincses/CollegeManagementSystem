@@ -38,6 +38,9 @@ const Home = () => {
       if (decoded.role === "doctor") {
         navigate("/doctor");
       }
+      if (decoded.role === "admin") {
+        navigate("/admin");
+      }
     } catch (error) {
       console.error("Invalid token:", error);
       localStorage.removeItem("authToken");
