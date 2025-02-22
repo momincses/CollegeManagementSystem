@@ -12,7 +12,8 @@ router.put('/:facilityId/booking/:bookingId', verifyToken, authorizeRoles('admin
 
 // 🎓 Student Routes
 router.get('/all', verifyToken, facilityController.getAllFacilities);
-router.post('/:facilityId/book', verifyToken, authorizeRoles('student', "admin"), facilityController.bookFacility);
-router.get('/:facilityId/track', verifyToken, authorizeRoles('student', "admin"), facilityController.trackBookingStatus);
+router.post('/:facilityId/book', verifyToken, authorizeRoles("student", "admin"), facilityController.bookFacility);
+router.get('/:facilityId/track', verifyToken, authorizeRoles("student", "admin"), facilityController.trackBookingStatus);
+router.get('/:facilityId', verifyToken, authorizeRoles("student", "admin"), facilityController.getFacilityById);
 
 module.exports = router;

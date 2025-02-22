@@ -13,6 +13,7 @@ const coordinatorRoutes = require("../src/routes/coordinatorRoutes")
 const http = require('http');
 const setupSocket = require('./socket/electionSocket');
 const misconductRoutes = require("./routes/misconductRoutes");
+const expenditureRoutes = require('./routes/expenditureRoutes');
 
 
 //Sick leave routes
@@ -69,6 +70,9 @@ app.use('/api/facility', facilityRoutes);
 
 // Add misconduct routes
 app.use("/api/misconduct", misconductRoutes);
+
+// Add expenditure routes
+app.use('/api/expenditures', expenditureRoutes);
 
 // Add after other routes
 app.get("/api/test", (req, res) => {

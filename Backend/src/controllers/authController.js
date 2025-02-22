@@ -96,15 +96,26 @@ const login = async (req, res) => {
     const { email, password } = req.body;
     console.log(email, password)
     const user = await User.findOne({ email });
+
+    // Add logging to debug
+    console.log('Login attempt:', { email, userFound: !!user });
+
     if (!user) return res.status(404).json({ message: "User not found" });
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
     const token = jwt.sign({ email: user.email, id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "2d" });
-    res.status(200).json({ message: "Logged in successfully", token });
+    res.status(200).json({ message: "Logged in successfully", token, role: user.role   });
+    
+    // res.status(200).json({ 
+    //   message: "Logged in successfully", 
+    //   token,
+    //   role: user.role  // Add role to response
+    // });
   } catch (err) {
-    res.status(500).json({ message: "Something went wrong", err });
+    console.error('Login error:', err);
+    res.status(500).json({ message: "Something went wrong", error: err.message });
   }
 };
 

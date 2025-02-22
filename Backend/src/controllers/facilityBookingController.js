@@ -27,7 +27,10 @@ exports.deleteFacility = async (req, res) => {
 // 🎓 Student/Admin - Get All Facilities with Booking Info
 exports.getAllFacilities = async (req, res) => {
   try {
+    console.log("in get all facilities")
     const facilities = await Facility.find().populate('bookings.student', 'name email');
+    console.log("Facilities fetched:", facilities);
+
     res.status(200).json({ success: true, facilities });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -78,11 +81,30 @@ exports.updateBookingStatus = async (req, res) => {
 
 // 🎓 Student - Track Booking Status
 exports.trackBookingStatus = async (req, res) => {
+  console.log("inside booking track controller");
   try {
     const studentId = req.user.id;
     const facilities = await Facility.find({ 'bookings.student': studentId }).select('name bookings');
     res.status(200).json({ success: true, facilities });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// 🎯 Controller to fetch facility by facilityId
+exports.getFacilityById = async (req, res) => {
+  try {
+    const { facilityId } = req.params;
+
+    const facility = await Facility.findById(facilityId).populate('bookings.student', 'name email'); // Populating student details (name, email)
+    if (!facility) {
+      return res.status(404).json({ message: 'Facility not found' });
+    }
+
+    console.log('Facility Data:', facility); // 💡 Console log facility data
+    res.status(200).json(facility);
+  } catch (error) {
+    console.error('Error fetching facility:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
