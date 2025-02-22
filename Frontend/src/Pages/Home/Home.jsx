@@ -12,16 +12,16 @@ const Home = () => {
 
   useEffect(() => {
     // Test API connection
-    fetch("http://localhost:5000/api/test")
-      .then((res) => res.json())
-      .then((data) => {
-        setApiStatus(data);
-        console.log("API Status:", data);
-      })
-      .catch((err) => {
-        console.error("API Connection Error:", err);
-        setApiStatus({ status: "error", message: err.message });
-      });
+    // fetch("http://localhost:5000/api/test")
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     setApiStatus(data);
+    //     console.log("API Status:", data);
+    //   })
+    //   .catch((err) => {
+    //     console.error("API Connection Error:", err);
+    //     setApiStatus({ status: "error", message: err.message });
+    //   });
 
     // Check authentication
     const token = localStorage.getItem("authToken");
@@ -35,8 +35,8 @@ const Home = () => {
       setUser(decoded);
 
       if (decoded.role === "student") navigate("/student");
-      if (decoded.role === "admin") {
-        navigate("/admin");
+      if (decoded.role === "doctor") {
+        navigate("/doctor");
       }
     } catch (error) {
       console.error("Invalid token:", error);

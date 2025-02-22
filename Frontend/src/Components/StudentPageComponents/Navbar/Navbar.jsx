@@ -36,7 +36,7 @@ const Navbar = () => {
     { text: "Dashboard", path: "/student" },
     { text: "Elections", path: "/student/election/candidates" },
     { text: "Sick Leave", path: "/student/sick-leave" },
-    { text: "Facility Booking", path: "/student/facility-booking" },
+    { text: "Facility Booking", path: "/student/allfacilities" },
     { text: "Event Requests", path: "/student/events" },
     { text: "Complaints", path: "/student/public-complaints" },
     { text: "Budget Tracker", path: "/student/budget-tracking" },

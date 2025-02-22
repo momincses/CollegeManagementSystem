@@ -77,6 +77,11 @@ const StudentRoutes = () => {
           }
         />
         {/* <Route path="/logout" element={<Logout />} /> */}
+
+        <Route path="/allfacilities" element={<FacilityBookingPage />} />
+        <Route path="/facility/:id" element={<FacilityDetails />} />
+        
+
         
       <Route path="*" element={<Navigate to="/" replace />} />
       </Route>

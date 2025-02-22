@@ -2,6 +2,8 @@
 const mongoose = require('mongoose');
 
 const facilitySchema = new mongoose.Schema({
+  facilityId: { type: mongoose.Schema.Types.ObjectId, auto: true }, // Auto-generated facility ID
+
   name: { type: String, required: true, unique: true },
   description: { type: String },
   bookings: [{

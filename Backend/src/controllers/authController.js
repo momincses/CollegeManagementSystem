@@ -106,13 +106,13 @@ const login = async (req, res) => {
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
     const token = jwt.sign({ email: user.email, id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "2d" });
-    res.status(200).json({ message: "Logged in successfully", token });
+    res.status(200).json({ message: "Logged in successfully", token, role: user.role   });
     
-    res.status(200).json({ 
-      message: "Logged in successfully", 
-      token,
-      role: user.role  // Add role to response
-    });
+    // res.status(200).json({ 
+    //   message: "Logged in successfully", 
+    //   token,
+    //   role: user.role  // Add role to response
+    // });
   } catch (err) {
     console.error('Login error:', err);
     res.status(500).json({ message: "Something went wrong", error: err.message });
