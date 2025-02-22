@@ -12,6 +12,7 @@ const facilityRoutes = require("./routes/facilityRoutes");
 const coordinatorRoutes = require("../src/routes/coordinatorRoutes")
 const http = require('http');
 const setupSocket = require('./socket/electionSocket');
+const misconductRoutes = require("./routes/misconductRoutes");
 const expenditureRoutes = require('./routes/expenditureRoutes');
 
 
@@ -66,6 +67,9 @@ app.use("/api/coordinator", coordinatorRoutes);
 
 // 🔗 Route Linking
 app.use('/api/facility', facilityRoutes);
+
+// Add misconduct routes
+app.use("/api/misconduct", misconductRoutes);
 
 // Add expenditure routes
 app.use('/api/expenditures', expenditureRoutes);
