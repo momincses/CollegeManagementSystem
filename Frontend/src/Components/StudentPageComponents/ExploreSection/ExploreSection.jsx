@@ -10,6 +10,10 @@ const exploreItems = [
   { label: "Complaints", path: "/student/complaints" },
   { label: "Budget Tracker", path: "/student/budget-tracking" },
   { label: "Cheater Records", path: "/student/budget-tracking" },
+  { label: "My Complaints", path: "/student/my-complaints" },
+  { label: "Register Complaint", path: "/student/register-complaint" },
+  { label: "Public Complaints", path: "/student/public-complaints" },
+  { label: "Logout", path: "/student/logout" },
 ];
 
 const ExploreSection = () => {
