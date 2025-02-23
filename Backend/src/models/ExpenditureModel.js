@@ -1,33 +1,48 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const expenditureSchema = new mongoose.Schema({
-  eventId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'EventRequest',
-    required: true
+const expenditureSchema = new mongoose.Schema(
+  {
+    eventName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    eventDescription: {
+      type: String,
+      trim: true,
+    },
+    totalAmount: {
+      type: Number,
+      trim: true,
+    },
+    expenditures: [
+      {
+        amountSpent: {
+          type: Number,
+          required: true,
+        },
+        description: {
+          type: String,
+          trim: true,
+        },
+        receiptImageUrl: {
+          type: String,
+          trim: true,
+        },
+        updatedBy: {
+          type: String,
+          required: true,
+          trim: true,
+          lowercase: true,
+        },
+        dateOfUpdate: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
   },
-  description: {
-    type: String,
-    required: true
-  },
-  amount: {
-    type: Number,
-    required: true
-  },
-  receiptImage: {
-    type: String,  // URL to stored image
-    required: true
-  },
-  date: {
-    type: Date,
-    default: Date.now
-  },
-  status: {
-    type: String,
-    enum: ['pending', 'approved', 'rejected'],
-    default: 'pending'
-  }
-}); 
+  { timestamps: true }
+);
 
-const Expenditure = mongoose.model('Expenditure', expenditureSchema);
-module.exports = Expenditure; 
+module.exports = mongoose.model("Expenditure", expenditureSchema);
