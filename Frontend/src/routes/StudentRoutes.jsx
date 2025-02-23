@@ -15,6 +15,9 @@ import RegisterComplaint from "../Components/AdminPageComponents/BoardMemberRout
 import PublicComplaints from "../Components/AdminPageComponents/BoardMemberRoutes/PublicComplaints";
 import Logout from "../Components/AdminPageComponents/BoardMemberRoutes/Logout";
 import BudgetTracking from "../Components/BudgetTracking";
+import AllExpenditures from "../Components/BudgetTracking/AllExpenditures";
+import ExpenditureDetails from "../Components/BudgetTracking/ExpenditureDetails";
+import LoginPage from "../Components/BudgetTracking/LoginPopup";
 
 const StudentRoutes = () => {
   return (
@@ -86,7 +89,31 @@ const StudentRoutes = () => {
             path="/expenditure/list"
             element={
               <ProtectedRoute>
-                <BudgetTracking />
+                <AllExpenditures />
+              </ProtectedRoute>
+            }
+          />
+        <Route
+            path="/expenditure/list"
+            element={
+              <ProtectedRoute>
+                <AllExpenditures />
+              </ProtectedRoute>
+            }
+          />
+        <Route
+            path="/expenditure/:id"
+            element={
+              <ProtectedRoute>
+                <ExpenditureDetails />
+              </ProtectedRoute>
+            }
+          />
+        <Route
+            path="/expenditure/login"
+            element={
+              <ProtectedRoute>
+                <LoginPage />
               </ProtectedRoute>
             }
           />

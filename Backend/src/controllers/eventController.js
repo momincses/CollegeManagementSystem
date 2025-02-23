@@ -69,30 +69,50 @@ const StudentCoordinator = require("../models/StudentCoordinator");
   }
 
   // Update event request status (admin only)
+  const Expenditure = require("../models/ExpenditureModel");
+  
   const updateEventStatus = async (req, res) => {
     try {
       const { eventId } = req.params;
       const { status, adminComments } = req.body;
-
+  
+      // Check if user is admin
       if (req.user.role !== 'admin') {
         return res.status(403).json({ message: 'Only admins can update event status' });
       }
-
+  
+      // Update the event status and admin comments
       const eventRequest = await EventRequest.findByIdAndUpdate(
         eventId,
         { status, adminComments },
         { new: true }
       );
-
+  
       if (!eventRequest) {
         return res.status(404).json({ message: 'Event request not found' });
       }
-
+  
+      // If status is approved, create expenditure entry
+      if (status === 'approved') {
+        const { eventName, description, budget } = eventRequest;
+  
+        const newExpenditure = new Expenditure({
+          eventName,
+          eventDescription: description,
+          totalAmount: budget.totalAmount,
+          expenditures: [], // Initially empty; will be updated when actual expenditures occur
+        });
+  
+        await newExpenditure.save();
+      }
+  
       res.status(200).json({ message: 'Event status updated', eventRequest });
     } catch (error) {
+      console.error("Error updating event status:", error);
       res.status(500).json({ message: 'Error updating event status', error: error.message });
     }
-  }
+  };
+  
 
   // Get event details by ID
   const getEventById = async (req, res) => {
