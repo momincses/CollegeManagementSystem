@@ -17,7 +17,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { motion } from "framer-motion";
 import AddIcon from "@mui/icons-material/Add";
-import { useAuth } from '../../../contexts/AuthContext';
+import { useAuth } from "../../contexts/AuthContext";
 
 const drawerWidth = 240;
 
@@ -32,18 +32,15 @@ const Navbar = () => {
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   const menuItems = [
-    { text: "Dashboard", path: "/student" },
-    { text: "Elections", path: "/student/election/candidates" },
-    { text: "Sick Leave", path: "/student/sick-leave" },
-    { text: "Facility Booking", path: "/student/allfacilities" },
-    { text: "Event Requests", path: "/student/events" },
-    { text: "Complaints", path: "/student/public-complaints" },
-    { text: "Budget Tracker", path: "/student/expenditure/list" },
-    { text: "Cheater Records", path: "/student/cheaters-records" },
-    { text: "My Complaints", path: "/student/my-complaints" },
-    { text: "Register Complaint", path: "/student/register-complaint" },
-    { text: "Public Complaints", path: "/student/public-complaints" },
-    { text: "Logout", path: "/student/logout" },
+    { text: "Dashboard", path: "/admin" },
+    { text: "Elections", path: "/admin/election/dashboard" },
+    { text: "Facility Booking", path: "/admin/facility-dashboard" },
+    { text: "Event Requests", path: "/admin/event/dashboard" },
+    { text: "Complaints", path: "/admin/public-complaints" },
+    { text: "Budget Tracker", path: "/admin/expenditure/list" },
+    { text: "Cheater Records", path: "/admin/cheaters-records" },
+    { text: "Public Complaints", path: "/admin/public-complaints" },
+    { text: "Logout", path: "/admin/logout" },
   ];
 
   const filteredMenuItems = menuItems;
@@ -109,19 +106,7 @@ const Navbar = () => {
           borderBottom: "1px solid #e0e0e0",
         }}
       >
-        {/* <Toolbar>
-          <IconButton
-            color="inherit"
-            edge="start"
-            onClick={toggleMobileDrawer}
-            sx={{ display: { md: "none" }, mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap>
-            Campus Management
-          </Typography>
-        </Toolbar> */}
+
 
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
           {/* Left side - Title and mobile menu */}

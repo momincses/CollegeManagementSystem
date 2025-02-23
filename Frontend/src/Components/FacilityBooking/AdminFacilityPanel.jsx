@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import {
   Box, Button, Typography, Dialog, DialogTitle, DialogContent, DialogActions,
-  TextField, List, ListItem, ListItemText, IconButton, Divider, Grid, Paper
+  TextField, List, ListItem, ListItemText, IconButton, Divider, Grid, Paper,
+  
 } from '@mui/material';
 import { Delete, CheckCircle, Cancel, Add, ListAlt } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
 
 const AdminPanel = () => {
   const [facilities, setFacilities] = useState([]);
@@ -74,7 +76,7 @@ const AdminPanel = () => {
   };
 
   return (
-    <Box sx={{ p: 4 }}>
+    <Box sx={{ p: 4, width: "100%" }}>
       <Typography variant="h4" gutterBottom>Admin Facility Management</Typography>
       <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
         <Button variant="contained" startIcon={<Add />} onClick={() => setShowDialog(true)}>
@@ -86,6 +88,13 @@ const AdminPanel = () => {
           onClick={() => setViewAll(!viewAll)}
         >
           {viewAll ? 'Back to Requests' : 'View All Facilities'}
+        </Button>
+        <Button
+          variant="outlined"
+        >
+          <Link to="/admin/facility-booking">
+          Facilities
+          </Link> 
         </Button>
       </Box>
 
@@ -147,33 +156,80 @@ const AdminPanel = () => {
 
       {/* All Facilities Section */}
       {viewAll && (
-        <Paper elevation={3} sx={{ p: 3, mt: 3 }}>
-          <Typography variant="h5" gutterBottom>All Facilities</Typography>
-          {facilities.length === 0 ? (
-            <Typography>No facilities available.</Typography>
-          ) : (
-            <Grid container spacing={2}>
-              {facilities.map((fac) => (
-                <Grid item xs={12} md={6} lg={4} key={fac._id}>
-                  <Paper elevation={2} sx={{ p: 2, height: '100%' }}>
-                    <Typography variant="h6">{fac.name}</Typography>
-                    <Typography sx={{ mb: 2 }}>{fac.description || 'No description provided.'}</Typography>
-                    <Button
-                      variant="outlined"
-                      color="error"
-                      startIcon={<Delete />}
-                      onClick={() => handleDeleteFacility(fac._id)}
-                      fullWidth
-                    >
-                      Delete
-                    </Button>
-                  </Paper>
-                </Grid>
-              ))}
-            </Grid>
-          )}
-        </Paper>
-      )}
+  <Paper
+    elevation={3}
+    sx={{
+      boxSizing:"border-box",
+      p: 4,
+      mt: 3,
+      width: '100%',
+      borderRadius: 3,
+      boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+      backgroundColor: '#f9f9f9',
+    }}
+  >
+    <Typography variant="h4" gutterBottom sx={{ fontWeight: 600, textAlign: 'center' }}>
+      All Facilities
+    </Typography>
+    {facilities.length === 0 ? (
+      <Typography sx={{ textAlign: 'center', color: 'gray', fontStyle: 'italic' }}>
+        No facilities available.
+      </Typography>
+    ) : (
+      <Grid
+        container
+        spacing={3}
+        sx={{
+          width: '100%',
+          justifyContent: 'center',
+        }}
+      >
+        {facilities.map((fac) => (
+          <Grid item xs={12} md={6} lg={4} key={fac._id}>
+            <Paper
+              elevation={4}
+              sx={{
+                p: 3,
+                height: '100%',
+                borderRadius: 3,
+                backgroundColor: 'white',
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                '&:hover': {
+                  transform: 'translateY(-8px)',
+                  boxShadow: '0 6px 30px rgba(0,0,0,0.1)',
+                },
+              }}
+            >
+              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                {fac.name}
+              </Typography>
+              <Typography sx={{ mb: 2, color: 'gray' }}>
+                {fac.description || 'No description provided.'}
+              </Typography>
+              <Button
+                variant="contained"
+                color="error"
+                startIcon={<Delete />}
+                onClick={() => handleDeleteFacility(fac._id)}
+                fullWidth
+                sx={{
+                  mt: 'auto',
+                  borderRadius: 2,
+                  py: 1.2,
+                  fontWeight: 600,
+                  textTransform: 'none',
+                }}
+              >
+                Delete
+              </Button>
+            </Paper>
+          </Grid>
+        ))}
+      </Grid>
+    )}
+  </Paper>
+)}
+
     </Box>
   );
 };

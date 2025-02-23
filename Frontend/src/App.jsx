@@ -16,11 +16,13 @@ import BoardMemberRoutes from "./routes/BoardMembersRoutes";
 import { AuthProvider } from "./contexts/AuthContext";
 import UnauthorizedPage from "./components/common/UnauthorizedPage";
 import StudentRoutes from "./routes/StudentRoutes";
+import AdminRoutes from "./routes/AdminRoutes"
 import CreateExpenditure from './Components/CreateExpenditure';
 import ExpenditureList from './Components/BudgetTracking';
 import CoordinatorRoutes from "./routes/CoordinatorRoutes";
 import AdminFacilityPanel from "./Components/FacilityBooking/AdminFacilityPanel";
 import EventDetail from './Components/EventDetail';
+import EventManagement from "./Components/admin/EventManagement";
 
 // Remove or comment out these imports until you create the components
 // import Navbar from './components/common/Navbar';
@@ -69,10 +71,10 @@ const App = () => {
 
           {/* Admin Routes */}
           <Route
-            path="/admin"
+            path="/admin/*"
             element={
               <ProtectedRoute allowedRoles={["admin"]}>
-                <AdminHome />
+                <AdminRoutes />
               </ProtectedRoute>
             }
           />
@@ -93,14 +95,14 @@ const App = () => {
           />
 
           {/* Board Member Routes */}
-          <Route
+          {/* <Route
             path="/board-member"
             element={
               <ProtectedRoute allowedRoles={["board-member"]}>
                 <AdminHome />
               </ProtectedRoute>
             }
-          />
+          /> */}
           <Route
             path="/board-member/*"
             element={
@@ -141,6 +143,14 @@ const App = () => {
             element={
               <ProtectedRoute allowedRoles={["admin", "student-coordinator", "board-member"]}>
                 <EventDetail />
+              </ProtectedRoute>
+            }
+          />
+          <Route 
+            path="/admin/event-request-management" 
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <EventManagement />
               </ProtectedRoute>
             }
           />

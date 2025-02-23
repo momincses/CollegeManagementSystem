@@ -32,7 +32,7 @@ app.use(express.json());
 // Allow requests from frontend
 app.use(cors({
   origin: "http://localhost:5173", // Replace with frontend URL in production
-  methods: "GET,POST,PUT,DELETE",
+  methods: "GET,POST,PUT,DELETE,PATCH",
   allowedHeaders: "Content-Type,Authorization"
 }));
 
