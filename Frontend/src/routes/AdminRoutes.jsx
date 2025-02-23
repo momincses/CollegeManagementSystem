@@ -17,6 +17,8 @@ import ElectionDashboard from "../Components/election/admin/ElectionDashboard";
 import CandidateList from "../Components/election/student/CandidateList";
 import AdminFacilityPanel from "../Components/FacilityBooking/AdminFacilityPanel"
 import EventManagement from "../Components/admin/EventManagement";
+import AllExpenditures from "../Components/BudgetTracking/AllExpenditures";
+import ExpenditureDetails from "../Components/BudgetTracking/ExpenditureDetails";
 const StudentRoutes = () => {
   return (
     <Routes>
@@ -78,7 +80,15 @@ const StudentRoutes = () => {
             path="/expenditure/list"
             element={
               <ProtectedRoute>
-                <BudgetTracking />
+                <AllExpenditures />
+              </ProtectedRoute>
+            }
+          />
+        <Route
+            path="/expenditure/:id"
+            element={
+              <ProtectedRoute>
+                <ExpenditureDetails />
               </ProtectedRoute>
             }
           />

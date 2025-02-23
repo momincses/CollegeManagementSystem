@@ -32,7 +32,6 @@ const Navbar = () => {
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   const menuItems = [
-    { text: "Dashboard", path: "/admin" },
     { text: "Elections", path: "/admin/election/dashboard" },
     { text: "Facility Booking", path: "/admin/facility-dashboard" },
     { text: "Event Requests", path: "/admin/event/dashboard" },
@@ -120,7 +119,7 @@ const Navbar = () => {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" noWrap>
-              Student Dashboard
+              Admin Dashboard
             </Typography>
           </Box>
 

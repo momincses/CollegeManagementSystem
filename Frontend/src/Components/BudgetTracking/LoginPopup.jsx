@@ -14,6 +14,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const { role } = useParams();
+  role = student-coordinator
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -31,7 +32,7 @@ const LoginPage = () => {
       const data = await response.json();
       if (response.ok) {
         localStorage.setItem("coordinatorAuthToken", data.token);
-        navigate(-1) // Redirect back to event request page
+        navigate(-1); // Redirect back to event request page
       }else {
         setError(data.message || "Login failed.");
       }
