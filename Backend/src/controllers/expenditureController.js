@@ -73,6 +73,4 @@ const addExpenditureEntry = async (req, res) => {
   }
 };
 
-
-
-module.exports = { getAllExpenditures, getExpenditureById, addExpenditureEntry };
+module.exports = { getAllExpenditures, getExpenditureById, deleteExpenditure,addExpenditureEntry }; 
