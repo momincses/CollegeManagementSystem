@@ -16,4 +16,22 @@ router.post('/:facilityId/book', verifyToken, authorizeRoles("student", "admin")
 router.get('/:facilityId/track', verifyToken, authorizeRoles("student", "admin"), facilityController.trackBookingStatus);
 router.get('/:facilityId', verifyToken, authorizeRoles("student", "admin"), facilityController.getFacilityById);
 
+const Facility = require('../models/Facility');
+const User = require('../models/usermodel'); // Assuming this model exists
+
+// GET facility details with populated email
+router.get('/:id', async (req, res) => {
+  try {
+    const facility = await Facility.findById(req.params.id)
+      .populate({
+        path: 'bookings.student',
+        select: 'email _id' // Only email and _id for registration number
+      });
+    if (!facility) return res.status(404).json({ message: 'Facility not found' });
+    res.json(facility);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching facility details', error: err.message });
+  }
+});
+
 module.exports = router;

@@ -41,55 +41,25 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
 const CandidateCard = ({ candidate, onVote, hasVoted, isAdmin }) => {
   return (
-    <StyledCard>
-      <StyledMedia
+    <Card sx={{ maxWidth: 345, m: 2 }}>
+      <CardMedia
         component="img"
+        height="200"
         image={candidate.photoUrl}
         alt={candidate.name}
       />
       <CardContent>
-        <Typography
-          gutterBottom
-          variant="h6"
-          component="div"
-          sx={{ fontWeight: 600, color: '#2C3E50' }}
-        >
+        <Typography gutterBottom variant="h5" component="div">
           {candidate.name}
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+        <Typography variant="body2" color="text.secondary">
           Position: {candidate.position}
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
-          Department: {candidate.department}
+        <Typography variant="body2" color="text.secondary">
+          {candidate.manifesto}
         </Typography>
-        <Box sx={{ mt: 1 }}>
-          <Typography
-            variant="body2"
-            sx={{ fontSize: '0.85rem', lineHeight: 1.4, color: '#4A5568' }}
-          >
-            {candidate.manifesto}
-          </Typography>
-        </Box>
-        {!isAdmin && (
-          <StyledButton
-            fullWidth
-            variant="contained"
-            onClick={() => onVote(candidate._id)}
-            disabled={hasVoted}
-          >
-            {hasVoted ? 'Already Voted' : 'Vote'}
-          </StyledButton>
-        )}
-        {isAdmin && (
-          <Typography
-            variant="subtitle1"
-            sx={{ mt: 1.5, textAlign: 'center', color: '#4A5568', fontWeight: 500 }}
-          >
-            Votes: {candidate.votes}
-          </Typography>
-        )}
       </CardContent>
-    </StyledCard>
+    </Card>
   );
 };
 

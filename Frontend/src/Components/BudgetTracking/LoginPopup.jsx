@@ -13,7 +13,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { role } = useParams();
+  // const { role } = useParams();
   role = student-coordinator
   const navigate = useNavigate();
 

@@ -14,11 +14,15 @@ import {
   DialogActions,
   Alert,
   CircularProgress,
-  Grid
+  Grid,
+  Card,
+  CardMedia,
+  CardContent,
+  CardActions
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import CandidateCard from '../common/CandidateCard';
-import SquareLoader from '../../../Components/Loader/SquareLoader/SquareLoader'
+import SquareLoader from '../../Loader/SquareLoader/SquareLoader'
 
 const steps = ['Review Candidates', 'Select Candidate', 'Confirm Vote'];
 
@@ -32,34 +36,49 @@ const VotingBooth = () => {
   const [error, setError] = useState(null);
   const [confirmDialog, setConfirmDialog] = useState(false);
   const [voteSuccess, setVoteSuccess] = useState(false);
+  const [step, setStep] = useState(1); // 1: Review, 2: Select, 3: Confirm
+  const [showVotedDialog, setShowVotedDialog] = useState(false);
 
-  useEffect(() => {
-    checkVoteStatus();
-    fetchCandidates();
-  }, []);
-
-  const checkVoteStatus = async () => {
+  const checkIfVoted = async () => {
     try {
-      const token = localStorage.getItem('authToken');
-      const response = await fetch('http://localhost:5000/api/election/vote-status', {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:5000/api/election/Vote-status', {
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       });
+
       const data = await response.json();
-      
       if (data.hasVoted) {
-        setHasVoted(true);
-        navigate('/student/election/results');
+        setShowVotedDialog(true);
+        return true;
       }
+      return false;
     } catch (err) {
-      setError('Failed to check voting status');
+      console.error('Error checking vote status:', err);
+      return false;
     }
   };
 
+  useEffect(() => {
+    const init = async () => {
+      const votingStatus = await checkIfVoted();
+      if (!votingStatus) {
+        fetchCandidates();
+      }
+    };
+    init();
+  }, []);
+
   const fetchCandidates = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/election/candidates');
+      const token = localStorage.getItem('authToken');
+      const response = await fetch('http://localhost:5000/api/election/candidates', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       const data = await response.json();
       setCandidates(data);
       setLoading(false);
@@ -69,30 +88,15 @@ const VotingBooth = () => {
     }
   };
 
-  const handleNext = () => {
-    if (activeStep === 1 && !selectedCandidate) {
-      setError('Please select a candidate before proceeding');
-      return;
-    }
-    setActiveStep((prevStep) => prevStep + 1);
-    if (activeStep === 1) {
-      setConfirmDialog(true);
-    }
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevStep) => prevStep - 1);
-  };
-
-  const handleCandidateSelect = (candidate) => {
+  const handleSelectCandidate = (candidate) => {
     setSelectedCandidate(candidate);
-    setError(null);
+    setStep(3); // Move to confirmation step
   };
 
-  const handleVoteSubmit = async () => {
+  const handleConfirmVote = async () => {
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch('http://localhost:5000/api/election/vote', {
+      const response = await fetch('http://localhost:5000/api/election/Vote', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -103,20 +107,28 @@ const VotingBooth = () => {
         })
       });
 
-      if (response.ok) {
-        setVoteSuccess(true);
-        setHasVoted(true);
-        setConfirmDialog(false);
-        setTimeout(() => {
-          navigate('/election/results');
-        }, 3000);
-      } else {
-        const data = await response.json();
-        setError(data.message);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Voting failed');
       }
+
+      alert('Vote submitted successfully!');
+      navigate('/student/election/results');
     } catch (err) {
-      setError('Failed to submit vote');
+      setError('Failed to submit vote: ' + err.message);
+      console.error('Voting error:', err);
     }
+  };
+
+  const handleBack = () => {
+    setStep(step - 1);
+    if (step === 3) {
+      setSelectedCandidate(null);
+    }
+  };
+
+  const handleViewResults = () => {
+    navigate('/student/election/results');
   };
 
   if (loading) {
@@ -135,66 +147,130 @@ const VotingBooth = () => {
     );
   }
 
-  const getStepContent = (step) => {
+  const renderStep = () => {
     switch (step) {
-      case 0:
+      case 1: // Review Step
         return (
-          <Paper sx={{ p: 3, mt: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Please review all candidates before proceeding
+          <>
+            <Typography variant="h4" gutterBottom>
+              Review Candidates
             </Typography>
             <Grid container spacing={3}>
               {candidates.map((candidate) => (
                 <Grid item xs={12} sm={6} md={4} key={candidate._id}>
-                  <CandidateCard
-                    candidate={candidate}
-                    isPreview={true}
-                  />
+                  <Card>
+                    <CardMedia
+                      component="img"
+                      height="200"
+                      image={candidate.photoUrl}
+                      alt={candidate.name}
+                    />
+                    <CardContent>
+                      <Typography variant="h6">{candidate.name}</Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Position: {candidate.position}
+                      </Typography>
+                      <Typography variant="body2">
+                        {candidate.manifesto}
+                      </Typography>
+                    </CardContent>
+                  </Card>
                 </Grid>
               ))}
             </Grid>
-          </Paper>
+            <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setStep(2)}
+              >
+                Proceed to Vote
+              </Button>
+            </Box>
+          </>
         );
-      
-      case 1:
+
+      case 2: // Select Step
         return (
-          <Paper sx={{ p: 3, mt: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Select your candidate
+          <>
+            <Typography variant="h4" gutterBottom>
+              Select Your Candidate
             </Typography>
             <Grid container spacing={3}>
               {candidates.map((candidate) => (
                 <Grid item xs={12} sm={6} md={4} key={candidate._id}>
-                  <CandidateCard
-                    candidate={candidate}
-                    selected={selectedCandidate?._id === candidate._id}
-                    onSelect={() => handleCandidateSelect(candidate)}
-                  />
+                  <Card>
+                    <CardMedia
+                      component="img"
+                      height="200"
+                      image={candidate.photoUrl}
+                      alt={candidate.name}
+                    />
+                    <CardContent>
+                      <Typography variant="h6">{candidate.name}</Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Position: {candidate.position}
+                      </Typography>
+                    </CardContent>
+                    <CardActions>
+                      <Button
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleSelectCandidate(candidate)}
+                      >
+                        Select Candidate
+                      </Button>
+                    </CardActions>
+                  </Card>
                 </Grid>
               ))}
             </Grid>
-          </Paper>
+            <Box sx={{ mt: 3, display: 'flex', justifyContent: 'space-between' }}>
+              <Button onClick={handleBack}>Back</Button>
+            </Box>
+          </>
         );
-      
-      case 2:
+
+      case 3: // Confirm Step
         return (
-          <Paper sx={{ p: 3, mt: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Review your selection
+          <>
+            <Typography variant="h4" gutterBottom>
+              Confirm Your Vote
             </Typography>
             {selectedCandidate && (
-              <Box sx={{ maxWidth: 400, mx: 'auto' }}>
-                <CandidateCard
-                  candidate={selectedCandidate}
-                  isPreview={true}
-                />
+              <Box sx={{ maxWidth: 400, mx: 'auto', textAlign: 'center' }}>
+                <Card>
+                  <CardMedia
+                    component="img"
+                    height="200"
+                    image={selectedCandidate.photoUrl}
+                    alt={selectedCandidate.name}
+                  />
+                  <CardContent>
+                    <Typography variant="h6">{selectedCandidate.name}</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Position: {selectedCandidate.position}
+                    </Typography>
+                  </CardContent>
+                </Card>
+                <Box sx={{ mt: 3, display: 'flex', justifyContent: 'space-between' }}>
+                  <Button onClick={handleBack}>Back</Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleConfirmVote}
+                  >
+                    Confirm Vote
+                  </Button>
+                </Box>
               </Box>
             )}
-          </Paper>
+          </>
         );
-      
+
       default:
-        return 'Unknown step';
+        return null;
     }
   };
 
@@ -211,13 +287,7 @@ const VotingBooth = () => {
           </Alert>
         )}
 
-        {voteSuccess && (
-          <Alert severity="success" sx={{ mb: 2 }}>
-            Your vote has been successfully recorded! Redirecting to results...
-          </Alert>
-        )}
-
-        <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
+        <Stepper activeStep={step - 1} sx={{ mb: 4 }}>
           {steps.map((label) => (
             <Step key={label}>
               <StepLabel>{label}</StepLabel>
@@ -225,35 +295,25 @@ const VotingBooth = () => {
           ))}
         </Stepper>
 
-        {getStepContent(activeStep)}
+        {renderStep()}
 
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
-          {activeStep !== 0 && (
-            <Button onClick={handleBack} sx={{ mr: 1 }}>
-              Back
-            </Button>
-          )}
-          <Button
-            variant="contained"
-            onClick={handleNext}
-            disabled={activeStep === 1 && !selectedCandidate}
-          >
-            {activeStep === steps.length - 1 ? 'Submit Vote' : 'Next'}
-          </Button>
-        </Box>
-
-        <Dialog open={confirmDialog} onClose={() => setConfirmDialog(false)}>
-          <DialogTitle>Confirm Your Vote</DialogTitle>
+        <Dialog
+          open={showVotedDialog}
+          onClose={() => setShowVotedDialog(false)}
+        >
+          <DialogTitle>Already Voted</DialogTitle>
           <DialogContent>
             <Typography>
-              Are you sure you want to vote for {selectedCandidate?.name}?
-              This action cannot be undone.
+              You have already cast your vote in this election.
             </Typography>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setConfirmDialog(false)}>Cancel</Button>
-            <Button onClick={handleVoteSubmit} variant="contained" color="primary">
-              Confirm Vote
+            <Button 
+              variant="contained" 
+              color="primary" 
+              onClick={handleViewResults}
+            >
+              View Results
             </Button>
           </DialogActions>
         </Dialog>

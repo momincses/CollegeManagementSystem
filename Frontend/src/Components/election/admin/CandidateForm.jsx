@@ -7,7 +7,7 @@ import {
   Typography,
   Alert,
   Paper
-} from '@mui/material';
+} from '@mui/material'; 
 
 const positions = ['President', 'Vice President', 'Secretary', 'Treasurer'];
 

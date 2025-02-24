@@ -44,6 +44,7 @@ app.use(cors({
 
 // Routes
 
+
 //Auth Routes
 app.use("/api/auth", authRoutes);
 

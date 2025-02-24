@@ -24,7 +24,7 @@ const statusColors = {
 };
 
 const EventsList = () => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(null);

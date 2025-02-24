@@ -25,7 +25,7 @@ import CandidateForm from './CandidateForm';
 import ResultsDisplay from '../common/ResultsDisplay';
 
 const TabPanel = ({ children, value, index, ...other }) => (
-  <div
+  <div 
     role="tabpanel"
     hidden={value !== index}
     id={`tabpanel-${index}`}

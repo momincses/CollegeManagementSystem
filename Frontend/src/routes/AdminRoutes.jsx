@@ -19,6 +19,7 @@ import AdminFacilityPanel from "../Components/FacilityBooking/AdminFacilityPanel
 import EventManagement from "../Components/admin/EventManagement";
 import AllExpenditures from "../Components/BudgetTracking/AllExpenditures";
 import ExpenditureDetails from "../Components/BudgetTracking/ExpenditureDetails";
+import AdminInvitePage from "../Components/admin/InviteLinkGenerator/AdminInvitePage"
 const StudentRoutes = () => {
   return (
     <Routes>
@@ -36,8 +37,16 @@ const StudentRoutes = () => {
         <Route path="/facility/:facilityId" element={<FacilityDetails />} />
         <Route path="/facility-dashboard" element={<AdminFacilityPanel />} />
         <Route path="/facility/:facilityId" element={<FacilityDetails />} />
+        {/* <Route path="/facility/:facilityId" element={<FacilityDetails />} /> */}
 
-
+        <Route
+        path="/invite"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <AdminInvitePage />
+          </ProtectedRoute>
+        }
+      />
     
         <Route
           path="/public-complaints"

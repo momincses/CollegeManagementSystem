@@ -10,6 +10,7 @@ import {
   Typography,
   Box,
   CircularProgress,
+  Paper,
 } from '@mui/material';
 
 const BASE_URL = "http://localhost:5000";
@@ -35,7 +36,6 @@ const FacilityDetails = () => {
         });
         const data = await response.json();
         if (data) setFacility(data);
-        console.log(data);
       } catch (err) {
         console.error('Error fetching details:', err);
       } finally {
@@ -85,13 +85,17 @@ const FacilityDetails = () => {
   const getBookingStatusColor = (day) => {
     const booking = facility?.bookings.find((b) => new Date(b.date).toDateString() === day.toDateString());
     if (booking) {
-      if (booking.status === 'approved') return '#ffb3b3'; // Light red (Approved)
-      if (booking.status === 'pending') return '#ffd699';  // Light orange (Pending)
-      return '#f0f0f0'; // Light gray for rejected/completed
+      if (booking.status === 'approved') return '#ffb3b3';
+      if (booking.status === 'pending') return '#ffd699';
+      return '#f0f0f0';
     }
-    return '#d4edda'; // Light green (Available)
+    return '#d4edda';
   };
-  
+
+  const handleDateClick = (day) => {
+    setSelectedDate(day);
+    setFormOpen(true);
+  };
 
   const renderCalendar = () => (
     <Grid container spacing={1} justifyContent="center" sx={{ gap: '5px' }}>
@@ -115,12 +119,6 @@ const FacilityDetails = () => {
             cursor: getBookingStatusColor(day) === '#d4edda' ? 'pointer' : 'not-allowed',
           }}
           onClick={() => getBookingStatusColor(day) === '#d4edda' && handleDateClick(day)}
-          onMouseEnter={(e) => {
-            if (getBookingStatusColor(day) === '#d4edda') e.currentTarget.style.transform = 'scale(1.05)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'scale(1)';
-          }}
         >
           <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
             {day.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' })}
@@ -129,11 +127,6 @@ const FacilityDetails = () => {
       ))}
     </Grid>
   );
-  
-  const handleDateClick = (day) => {
-    setSelectedDate(day);
-    setFormOpen(true);
-  };
 
   if (loading) {
     return (
@@ -159,10 +152,31 @@ const FacilityDetails = () => {
       <Typography variant="body1" paragraph>
         {facility.description || 'No description available.'}
       </Typography>
+
       <Typography variant="h5" gutterBottom>
         Booking Calendar
       </Typography>
       {renderCalendar()}
+
+      <Typography variant="h6" mt={4}>
+        Booking Details:
+      </Typography>
+      {facility.bookings.map((booking, index) => (
+        <Paper key={index} elevation={3} sx={{ p: 2, mb: 2 }}>
+          <Typography variant="body1">
+            <strong>Date:</strong> {new Date(booking.date).toLocaleDateString()}
+          </Typography>
+          <Typography variant="body2">
+            <strong>Email:</strong> {booking.student?.email || 'N/A'}
+          </Typography>
+          <Typography variant="body2">
+            <strong>Registration No.:</strong> {booking.student?._id?.slice(0, 10) || 'N/A'}
+          </Typography>
+          <Typography variant="body2">
+            <strong>Status:</strong> {booking.status}
+          </Typography>
+        </Paper>
+      ))}
 
       <Dialog open={formOpen} onClose={() => setFormOpen(false)}>
         <DialogTitle>Book for {selectedDate?.toDateString()}</DialogTitle>

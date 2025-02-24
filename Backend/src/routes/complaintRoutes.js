@@ -29,7 +29,7 @@ router.get('/get-user-complaints/:id',
 );
 
 // register a complaint
-router.post('/register-complaint/:id', 
+router.post('/register-complaint', 
   verifyToken, 
   authorizeRoles('student'), 
   RegisterComplaint

@@ -39,6 +39,7 @@ const Navbar = () => {
     { text: "Budget Tracker", path: "/admin/expenditure/list" },
     { text: "Cheater Records", path: "/admin/cheaters-records" },
     { text: "Public Complaints", path: "/admin/public-complaints" },
+    { text: "Admin Invite", path: "/admin/invite" },
     { text: "Logout", path: "/admin/logout" },
   ];
 

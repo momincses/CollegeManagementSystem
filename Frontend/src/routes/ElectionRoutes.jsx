@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route, Navigate, Link } from 'react-router-dom';
 import { Box, Button, Stack } from '@mui/material';
 import { styled } from '@mui/system';
+import {jwtDecode} from 'jwt-decode';
 
 import CandidateList from "../Components/election/student/CandidateList";
 import VotingBooth from '../Components/election/student/VotingBooth';
@@ -40,7 +41,19 @@ const NavWrapper = styled(Box)({
 });
 
 const ElectionRoutes = () => {
-  const userRole = 'admin'; // This should come from your auth context
+  const [userRole, setUserRole] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        setUserRole(decodedToken?.role || null);
+      } catch (error) {
+        console.error('Failed to decode token:', error);
+      }
+    }
+  }, []);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", alignItems:"flex-start", width: '100%' }}>

@@ -36,9 +36,11 @@ const getCandidates = async (req, res) => {
 // Submit vote
 const submitVote = async (req, res) => {
     try {
+        console.log("inside /vote")
         const { candidateId } = req.body;
+        console.log(req.body)
         const studentId = req.user.id; // From auth middleware
-
+console.log(studentId)
         // Check if student has already voted
         const existingVote = await Vote.findOne({ studentId });
         if (existingVote) {
